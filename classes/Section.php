@@ -1,5 +1,6 @@
 <?php
 
+
 class Section {
     private $title;
 	
@@ -11,7 +12,7 @@ class Section {
 		return $this->title;
 	}
 	
-	public function getSecContent() {
+	public function getContent() {
 		return new ArrayObject($this);
 	}
 	

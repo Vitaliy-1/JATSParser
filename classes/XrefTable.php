@@ -1,7 +1,7 @@
 <?php
 
-class Xref extends ParContent {
-	private $content;
+class XrefTable extends ParContent {
+    private $content;
 
     public function getContent()
     {
