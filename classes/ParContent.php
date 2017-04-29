@@ -1,7 +1,8 @@
 <?php
 
 class ParContent extends Section {
-	public function getContent() {
+
+    public function getContent() {
 		return new ArrayObject($this);
 	}
 }

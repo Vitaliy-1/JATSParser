@@ -8,6 +8,7 @@ require ("../classes/Italic.php");
 require ("../classes/XrefFig.php");
 require ("../classes/XrefTable.php");
 require ("../classes/Bold.php");
+require ("../classes/Fig.php");
 
 function Body($xpath): ArrayObject
 {
@@ -20,7 +21,23 @@ function Body($xpath): ArrayObject
             if ($secContent->tagName == "title") {
                 //echo $secContent->nodeValue, "\n";
                 $section->setTitle(trim($secContent->nodeValue));
-            } else if ($secContent->tagName == "list") {
+            } elseif ($secContent->tagName == "fig") {
+                $fig = new Fig();
+                $section->getContent()->offsetSet(null, $fig);
+                $fig->setId($secContent->getAttribute("id"));
+                foreach ($xpath->evaluate("label", $secContent) as $label) {
+                    $fig->setLabel($label->nodeValue);
+                }
+                foreach ($xpath->evaluate("caption/title", $secContent) as $title) {
+                    $fig->setTitle($title->nodeValue);
+                }
+                foreach ($xpath->evaluate("caption/p", $secContent) as $caption) {
+                    $fig->setCaption($caption->nodeValue);
+                }
+                foreach ($xpath->evaluate("graphic", $secContent) as $graphic) {
+                    $fig->setHref($graphic->getAttribute("xlink:href"));
+                }
+            } elseif ($secContent->tagName == "list") {
                 $list = new Lists();
                 if ($secContent->getAttribute("list-type") == "ordered") {
                     $list->setType("ordered");
@@ -34,6 +51,7 @@ function Body($xpath): ArrayObject
                 $section->getContent()->offsetSet(null, $list);
             } else if ($secContent->tagName == "p") {
                 $paragraphContent = new ParContent();
+                $paragraphContent->setType("paragraph");
                 $section->getContent()->offsetSet(null, $paragraphContent);
                 //echo "\n";
                 foreach ($secContent->childNodes as $parContent) {

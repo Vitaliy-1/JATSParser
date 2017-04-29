@@ -2,7 +2,7 @@
 
 class ParText extends ParContent {
 	private $content;
-	
+
 	public function setContent ($content) {
 		$this->content= $content;
 	}

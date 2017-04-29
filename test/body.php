@@ -1,6 +1,6 @@
 <?php
 
-function testSections($sections)
+function testBody($sections)
 {
     foreach ($sections as $sect) {
         echo $sect->getTitle(), "\n";
@@ -28,6 +28,8 @@ function testSections($sections)
                 foreach ($secCont->getContent() as $item) {
                     echo $item, "\n";
                 }
+            } elseif (get_class($secCont) == "Fig") {
+                echo "\n", $secCont->getLabel(), "\n";
             } elseif (get_class($secCont) == "Section") {
                 echo $secCont->getTitle(),"\n";
                 foreach ($secCont->getContent() as $secCont1) {
