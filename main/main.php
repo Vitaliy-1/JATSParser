@@ -30,6 +30,6 @@ htmlBodyStructure($html, $sections);
 /* saving html to a file */
 $html->saveHTML();
 $output = $html->saveHTML();
-$the_file = "../article2.html";
+$the_file = "../test.html";
 $html->save($the_file);
 file_put_contents($the_file, preg_replace('/<\?xml[^>]+>\s+/', '<!DOCTYPE html>' . "\n", file_get_contents($the_file)));

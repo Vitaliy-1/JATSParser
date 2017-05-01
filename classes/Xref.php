@@ -2,6 +2,7 @@
 
 class Xref extends ParContent {
 	private $content;
+	private $rid;
 
     public function getContent()
     {
@@ -11,5 +12,21 @@ class Xref extends ParContent {
     public function setContent($content)
     {
         $this->content = $content;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRid()
+    {
+        return $this->rid;
+    }
+
+    /**
+     * @param mixed $rid
+     */
+    public function setRid($rid)
+    {
+        $this->rid = $rid;
     }
 }
