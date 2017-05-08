@@ -1,6 +1,6 @@
 <?php
 
-class ParContent {
+class Row {
     private $type;
 
     /**
@@ -19,7 +19,8 @@ class ParContent {
         $this->type = $type;
     }
 
+    /* for Cell as an array */
     public function getContent() {
-		return new ArrayObject($this);
-	}
+        return new ArrayObject($this);
+    }
 }

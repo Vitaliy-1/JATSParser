@@ -91,7 +91,7 @@ function htmlGeneralStructure(): DOMDocument
     $articleText->setAttribute("class", "article-text");
     $articleContent->appendChild($articleText);
 
-    $divFront = $html->createElement("div");
+    $divFront = $html->createElement("div", " ");
     $divFront->setAttribute("class", "front");
     $articleText->appendChild($divFront);
     return $html;

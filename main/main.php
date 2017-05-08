@@ -1,9 +1,10 @@
 <?php
 
 require_once("body.php");
-require_once("../test/body.php");
+require_once ("back.php");
 require_once("../html/general.php");
 require_once("../html/body.php");
+require_once ("../html/back.php");
 
 /* iterating through JATS XML nodes and write data to Objects */
 $xml = new DOMDocument();
@@ -13,19 +14,20 @@ $xpath = new DOMXPath($xml);
 /* parsing sections inside the body */
 $sections = Body($xpath);
 
-/* testing body output */
-/*
-testBody($sections);
-*/
+/* parsing references */
+$references = Back($xpath);
 
 /* generating
- * html */
+ * html
+ * */
 
 /* generating the structure of html */
 $html = htmlGeneralStructure();
 
 /* add article body to html */
-htmlBodyStructure($html, $sections);
+htmlBodyStructure($html, $sections); // sections -> ArrayObject
+htmlBackStructure($html, $references);  // $references -> References class
+
 
 /* saving html to a file */
 $html->saveHTML();

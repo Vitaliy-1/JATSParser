@@ -4,7 +4,7 @@
  * @param $html -> our html as DOM object
  * @param $sections -> sections of our article as ArrayObject
  */
-function htmlBodyStructure($html, $sections)
+function htmlBodyStructure(DOMDocument $html, ArrayObject $sections)
 {
     $path = new DOMXPath($html);
     $divArticletexts = $path->evaluate("/html/body/main/div/div/div/div/div/div[@class='article-text']");
@@ -39,7 +39,7 @@ function htmlBodyStructure($html, $sections)
  * @param $sect -> single section of our article
  * @param $divPanelBody
  */
-function sectionWriting($html, $sect, $divPanelBody)
+function sectionWriting(DOMDocument $html, Section $sect, DOMElement $divPanelBody)
 {
     foreach ($sect->getContent() as $secCont) {
         if (get_class($secCont) == "ParContent" && $secCont->getType() == "paragraph") {
@@ -67,6 +67,147 @@ function sectionWriting($html, $sect, $divPanelBody)
                 $liInside->appendChild($pInsideLi);
                 paragraphWriting($html, $parCont, $pInsideLi);
             }
+        } elseif (get_class($secCont) == "Table") {
+            $divFigure = $html->createElement("div");
+            $divFigure->setAttribute("class", "figure-wrap table");
+            $divPanelBody->appendChild($divFigure);
+
+            $divFigureBox = $html->createElement("div");
+            $divFigureBox->setAttribute("class", "fig-box");
+            $divFigureBox->setAttribute("id", $secCont->getId());
+            $divFigure->appendChild($divFigureBox);
+
+            $tableNode = $html->createElement("table");
+            $divFigureBox->appendChild($tableNode);
+
+            /* writing table title */
+            foreach ($secCont->getContent() as $tableTitles) {
+                if ($tableTitles->getType() == "table-title") {
+                    $captionElement = $html->createElement("caption");
+                    $captionElement->setAttribute("class", "table-title");
+                    $tableNode->appendChild($captionElement);
+
+                    $strongLabelElement = $html->createElement("strong", $secCont->getLabel());
+                    $captionElement->appendChild($strongLabelElement);
+
+                    foreach ($tableTitles->getContent() as $tableTitle) {
+                        paragraphWriting($html, $tableTitle, $captionElement);
+                    }
+                }
+            }
+            /* we need to create table head and body only once */
+            $counter1 = 0;
+            $counter2 = 0;
+
+            /* iterating through table ArraObjects */
+            foreach ($secCont->getContent() as $row) {
+                if ($row->getType() == "head") {
+                    $counter1++;
+                    if ($counter1 == 1) {
+                        $theadNode = $html->createElement("thead");
+                        $tableNode->appendChild($theadNode);
+                    }
+                    $tr = $html->createElement("tr");
+                    $theadNode->appendChild($tr);
+                    foreach ($row->getContent() as $cell) {
+                        $thElement = $html->createElement("th");
+                        $thElement->setAttribute("colspan", $cell->getColspan());
+                        $thElement->setAttribute("rowspan", $cell->getRowspan());
+                        $tr->appendChild($thElement);
+                        foreach ($cell->getContent() as $parInCell) {
+                            paragraphWriting($html, $parInCell, $thElement);
+                        }
+                    }
+                } elseif ($row->getType() == "body") {
+                    $counter2++;
+                    if ($counter2 == 1) {
+                        $tbodyNode = $html->createElement("tbody");
+                        $tableNode->appendChild($tbodyNode);
+                    }
+                    $tr = $html->createElement("tr");
+                    $tbodyNode->appendChild($tr);
+                    foreach ($row->getContent() as $cell) {
+                        $tdElement = $html->createElement("td");
+                        $tdElement->setAttribute("colspan", $cell->getColspan());
+                        $tdElement->setAttribute("rowspan", $cell->getRowspan());
+                        $tr->appendChild($tdElement);
+                        foreach ($cell->getContent() as $parInCell) {
+                            paragraphWriting($html, $parInCell, $tdElement);
+                        }
+                    }
+                } elseif ($row->getType() == "flat") {
+                    $tr = $html->createElement("tr");
+                    $tableNode->appendChild($tr);
+                    foreach ($row->getContent() as $cell) {
+                        $tdElement = $html->createElement("td");
+                        $tdElement->setAttribute("colspan", $cell->getColspan());
+                        $tdElement->setAttribute("rowspan", $cell->getRowspan());
+                        $tr->appendChild($tdElement);
+                        foreach ($cell->getContent() as $parInCell) {
+                            paragraphWriting($html, $parInCell, $tdElement);
+                        }
+                    }
+                }
+            }
+
+            foreach ($secCont->getContent() as $tableCaption) {
+                if ($tableCaption->getType() == "table-caption") {
+                    $tableCommentsElement = $html->createElement("p");
+                    $tableCommentsElement->setAttribute("class", "comments");
+                    $divFigureBox->appendChild($tableCommentsElement);
+
+                    foreach ($tableTitles->getContent() as $tableTitle) {
+                        paragraphWriting($html, $tableTitle, $tableCommentsElement);
+                    }
+                }
+            }
+
+        } elseif(get_class($secCont) == "Figure") {
+            $divFigureWrap = $html->createElement("div");
+            $divFigureWrap->setAttribute("class", "figure-wrap fig");
+            $divPanelBody->appendChild($divFigureWrap);
+
+            $divFigureBoxFig = $html->createElement("div");
+            $divFigureBoxFig->setAttribute("class", "fig-box");
+            $divFigureBoxFig->setAttribute("id", $secCont->getId());
+            $divFigureWrap->appendChild($divFigureBoxFig);
+
+            $figStrong = $html->createElement("strong", $secCont->getLabel());
+            $divFigureBoxFig->appendChild($figStrong);
+
+
+            foreach ($secCont->getContent() as $figurePars) {
+                if ($figurePars->getType() == "figure-title") {
+                    foreach ($figurePars as $figurePar) {
+                        paragraphWriting($html, $figurePar, $divFigureBoxFig);
+                    }
+                }
+            }
+
+            /* set div for image link and caption */
+            $figureDivImagewrap = $html->createElement("div");
+            $figureDivImagewrap->setAttribute("class", "imagewrap");
+            $divFigureBoxFig->appendChild($figureDivImagewrap);
+
+            $figureImgLink = $html->createElement("img");
+            $figureImgLink->setAttribute("src", $secCont->getLink());
+            $figureDivImagewrap->appendChild($figureImgLink);
+
+            $figureDivInsideDiv = $html->createElement("div");
+            $figureDivImagewrap->appendChild($figureDivInsideDiv);
+
+            $figurePComments = $html->createElement("p");
+            $figurePComments->setAttribute("class", "comments");
+            $figureDivInsideDiv->appendChild($figurePComments);
+
+            foreach ($secCont->getContent() as $figureCaptionPars) {
+                if ($figureCaptionPars->getType() == "figure-caption") {
+                    foreach ($figureCaptionPars as $figureCaptionPar) {
+                        paragraphWriting($html, $figureCaptionPar, $figurePComments);
+                    }
+                }
+            }
+
         } elseif (get_class($secCont) == "ArrayObject") {
             foreach ($secCont as $subsec) {
 
@@ -105,7 +246,7 @@ function sectionWriting($html, $sect, $divPanelBody)
  * @param $parCont
  * @param $pForSections
  */
-function paragraphWriting($html, $parCont, $pForSections)
+function paragraphWriting(DOMDocument $html, ParContent $parCont, DOMElement $pForSections)
 {
     if (get_class($parCont) == "ParText") {
         $parTextNode = $html->createTextNode($parCont->getContent());

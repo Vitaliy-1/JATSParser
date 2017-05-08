@@ -4,6 +4,11 @@
 class Section {
     private $title;
     private $type;
+    private $content;
+
+    public function __construct() {
+        $this->content = new ArrayObject(array());
+    }
 
 	public function setTitle ($title) {
 		$this->title = $title;
@@ -29,8 +34,11 @@ class Section {
         $this->type = $type;
     }
 
-	public function getContent() {
-		return new ArrayObject($this);
-	}
-
+    public function getContent(): ArrayObject
+    {
+        if ($this->content == null) {
+            $this->content = new ArrayObject();
+        }
+        return $this->content;
+    }
 }

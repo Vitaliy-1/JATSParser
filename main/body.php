@@ -1,15 +1,18 @@
 <?php
-require ("../classes/Section.php");
-require ("../classes/ParContent.php");
-require ("../classes/ParText.php");
-require ("../classes/Xref.php");
-require ("../classes/Italic.php");
-require ("../classes/XrefFig.php");
-require ("../classes/XrefTable.php");
-require ("../classes/Bold.php");
-require ("../classes/Fig.php");
+require_once ("../classes/Section.php");
+require_once ("../classes/ParContent.php");
+require_once ("../classes/ParText.php");
+require_once ("../classes/Xref.php");
+require_once ("../classes/Italic.php");
+require_once ("../classes/XrefFig.php");
+require_once ("../classes/XrefTable.php");
+require_once ("../classes/Bold.php");
+require_once ("../classes/Table.php");
+require_once ("../classes/Row.php");
+require_once ("../classes/Cell.php");
+require_once ("../classes/Figure.php");
 
-function Body($xpath): ArrayObject
+function Body(DOMXPath $xpath): ArrayObject
 {
     $sections = new ArrayObject();
     $subsections = new ArrayObject();
@@ -27,7 +30,7 @@ function Body($xpath): ArrayObject
  * @param $subsections - our subsection as ArrayObject
  * @param $subsubsections - our subsubsection as ArrayObject
  */
-function sectionParsing($xpath, $sec, $sections, $subsections, $subsubsections)
+function sectionParsing(DOMXPath $xpath, DOMElement $sec, ArrayObject $sections, ArrayObject $subsections, ArrayObject $subsubsections)
 {
     $section = new Section();
     $ifSubSecs = $xpath->evaluate("parent::sec", $sec);
@@ -52,23 +55,7 @@ function sectionParsing($xpath, $sec, $sections, $subsections, $subsubsections)
 
         if ($secContent->tagName == "title") {
             $section->setTitle(trim($secContent->nodeValue));
-        } elseif ($secContent->tagName == "fig") {
-            $fig = new Fig();
-            $section->getContent()->offsetSet(null, $fig);
-            $fig->setId($secContent->getAttribute("id"));
-            foreach ($xpath->evaluate("label", $secContent) as $label) {
-                $fig->setLabel($label->nodeValue);
-            }
-            foreach ($xpath->evaluate("caption/title", $secContent) as $title) {
-                $fig->setTitle($title->nodeValue);
-            }
-            foreach ($xpath->evaluate("caption/p", $secContent) as $caption) {
-                $fig->setCaption($caption->nodeValue);
-            }
-            foreach ($xpath->evaluate("graphic", $secContent) as $graphic) {
-                $fig->setHref($graphic->getAttribute("xlink:href"));
-            }
-        } elseif ($secContent->tagName == "list") {
+        } elseif ($secContent->tagName == "list") { // start of parsing lists, ordered and unordered are supported
             $listContent = new ParContent();
 
             if ($secContent->getAttribute("list-type") == "ordered") {
@@ -80,11 +67,110 @@ function sectionParsing($xpath, $sec, $sections, $subsections, $subsubsections)
                 paragraphParsing($listItem, $listContent);
             }
             $section->getContent()->offsetSet(null, $listContent);
-        } elseif ($secContent->tagName == "p") {
+        } elseif ($secContent->tagName == "p") { // start of parsing paragraphs
             $paragraphContent = new ParContent();
             $paragraphContent->setType("paragraph");
             $section->getContent()->offsetSet(null, $paragraphContent);
             paragraphParsing($secContent, $paragraphContent);
+
+        } elseif ($secContent->tagName == "table-wrap") { // start of parsing tables
+            $table = new Table();
+            $section->getContent()->offsetSet(null, $table);
+            $tableIdAttr = $secContent->getAttribute("id");
+            if ($tableIdAttr != null) {
+                $table->setId($tableIdAttr);
+            }
+
+            /* set table label, e.g. 'Table 1' */
+            foreach ($xpath->evaluate("label", $secContent) as $labelNode) {
+                $table->setLabel($labelNode->nodeValue);
+            }
+
+            /* parsing table title */
+            foreach ($xpath->evaluate("caption/title", $secContent) as $tableTitle) {
+                $titleParagraph = new ParContent();
+                $titleParagraph->setType("table-title");
+                $table->getContent()->offsetSet(null, $titleParagraph);
+                paragraphParsing($tableTitle, $titleParagraph);
+            }
+
+            /* parsing table with head and body */
+            foreach ($xpath->evaluate("table/thead/tr|table/tbody/tr", $secContent) as $rowNode) {
+                if ($rowNode != null) {
+                    $row = new Row();
+                    $parentNode = $rowNode->parentNode;
+                    if ($parentNode->tagName == "thead") {
+                        $row->setType("head");
+                        $table->getContent()->offsetSet(null, $row);
+                        foreach ($xpath->evaluate("th|td", $rowNode) as $cellNode) {
+                            $cell = new Cell();
+                            $row->getContent()->offsetSet(null, $cell);
+                            $cell->setColspan($cellNode->getAttribute("colspan"));
+                            $cell->setRowspan($cellNode->getAttribute("rowspan"));
+                            paragraphParsing($cellNode, $cell);
+                        }
+                    } elseif ($parentNode->tagName == "tbody") {
+                        $row->setType("body");
+                        $table->getContent()->offsetSet(null, $row);
+                        foreach ($xpath->evaluate("th|td", $rowNode) as $cellNode) {
+                            $cell = new Cell();
+                            $row->getContent()->offsetSet(null, $cell);
+                            $cell->setColspan($cellNode->getAttribute("colspan"));
+                            $cell->setRowspan($cellNode->getAttribute("rowspan"));
+                            paragraphParsing($cellNode, $cell);
+                        }
+                    }
+                }
+            }
+
+            /* parsing table without head */
+            foreach ($xpath->evaluate("table/tr", $secContent) as $rowNodeWithoutHead) {
+                if ($rowNodeWithoutHead != null) {
+                    $row = new Row();
+                    $row->setType("flat");
+                    $table->getContent()->offsetSet(null, $row);
+                    foreach ($xpath->evaluate("th|td", $rowNodeWithoutHead) as $cellNodeWithoutHead) {
+                        $cell = new Cell();
+                        $row->getContent()->offsetSet(null, $cell);
+                        $cell->setColspan($cellNodeWithoutHead->getAttribute("colspan"));
+                        $cell->setRowspan($cellNodeWithoutHead->getAttribute("rowspan"));
+                        paragraphParsing($cellNodeWithoutHead, $cell);
+                    }
+
+                }
+            }
+
+            /* parsing table caption */
+            foreach ($xpath->evaluate("caption/p", $secContent) as $tableCaption) {
+                $captionParagraph = new ParContent();
+                $captionParagraph->setType("table-caption");
+                $table->getContent()->offsetSet(null, $captionParagraph);
+                paragraphParsing($tableCaption, $captionParagraph);
+            }
+
+
+        } elseif ($secContent->tagName == "fig") {
+            $figure = new Figure();
+            $section->getContent()->offsetSet(null, $figure);
+            $figure->setId($secContent->getAttribute("id"));
+            foreach ($xpath->evaluate("label", $secContent) as $labelNode) {
+                $figure->setLabel($labelNode->nodeValue);
+            }
+            foreach ($xpath->evaluate("caption/title", $secContent) as $figureTitleNode) {
+                $figureTitle = new ParContent();
+                $figureTitle->setType("figure-title");
+                $figure->getContent()->offsetSet(null, $figureTitle);
+                paragraphParsing($figureTitleNode, $figureTitle);
+            }
+            foreach ($xpath->evaluate("caption/p", $secContent) as $figureCaptionNode) {
+                $figureCaption = new ParContent();
+                $figureCaption->setType("figure-caption");
+                $figure->getContent()->offsetSet(null, $figureCaption);
+                paragraphParsing($figureCaptionNode, $figureCaption);
+            }
+            foreach ($xpath->evaluate("graphic", $secContent) as $graphicLinksNode) {
+                $figure->setLink($graphicLinksNode->getAttribute("xlink:href"));
+            }
 
         } elseif ($secContent->tagName == "sec") {
             if ($section->getType() == "sec") {
@@ -103,9 +189,9 @@ function sectionParsing($xpath, $sec, $sections, $subsections, $subsubsections)
 
 /**
  * @param $secContent -> XML section Node content
- * @param $paragraphContent -> XML paragraph Node content
+ * @param $paragraphContent -> Cell or ParContent object
  */
-function paragraphParsing($secContent, $paragraphContent)
+function paragraphParsing(DOMElement $secContent, $paragraphContent)
 {
     foreach ($secContent->childNodes as $parContent) {
         if ($parContent->nodeType == XML_TEXT_NODE) {

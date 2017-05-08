@@ -99,19 +99,26 @@
    <body>
          <sec id="s1">
             <title>Актуальність</title>
-            <p><italic>Тривога</italic> є однією із найбільш частих причин звернень пацієнтів до мережі первинної ланки медичної допомоги. Окрім того, велика частка соматичних скарг пацієнтів також спровокована підвищеним рівнем тривоги [<xref ref-type="bibr" rid="bib1">1</xref>]. Дані, отримані в рамках обсерваційних досліджень, вказують на те, що, в порівнянні з іншими тривожними розладами, особи з генералізованим тривожним розладом (ГТР) є найбільш активними користувачами послуг фахівців первинної медичної мережі (особливо це стосується послуг кардіологів і гастроентерологів). За даними різних досліджень близько 70% цих пацієнтів зверталися до лікарів  [<xref ref-type="bibr" rid="bib2">2</xref>], що суттєво частіше, ніж, наприклад, пацієнти з депресивними розладами [<xref ref-type="bibr" rid="bib3">3</xref>]. При цьому, лише 14% були проконсультовані фахівцями в галузі психічного здоров'я [<xref ref-type="bibr" rid="bib4">4</xref>] і менш ніж 10% отримали адекватну психологічну або психофармакологічну допомогу [<xref ref-type="bibr" rid="bib3">3</xref>].</p>
+            <p><italic>Тривога</italic> є однією із найбільш частих причин звернень пацієнтів до мережі первинної ланки медичної допомоги. Окрім того, велика частка соматичних скарг пацієнтів також спровокована підвищеним рівнем тривоги [<xref ref-type="bibr" rid="bib1">1</xref>]. Дані, отримані в рамках обсерваційних досліджень, вказують на те, що, в порівнянні з іншими тривожними розладами, особи з генералізованим тривожним розладом (ГТР) є найбільш активними користувачами послуг фахівців первинної медичної мережі (особливо це стосується послуг кардіологів і гастроентерологів). За даними різних досліджень близько 70% цих пацієнтів зверталися до лікарів  [<xref ref-type="bibr" rid="bib2">2</xref>], що суттєво частіше, ніж, наприклад, пацієнти з депресивними розладами [<xref ref-type="bibr" rid="bib3">3</xref>]. При цьому, лише 14% були проконсультовані фахівцями в галузі психічного здоров'я [<xref ref-type="bibr" rid="bib4">4</xref>] і менш ніж 10% отримали адекватну психологічну або психофармакологічну допомогу [<xref ref-type="bibr" rid="bib3">3</xref>](<xref ref-type="fig" rid="fig1">Fig. 1</xref>).</p>
+			<fig id="fig1">
+				<object-id pub-id-type="doi"/>
+				<label>Figure 1</label>
+				<caption>
+				   <title>Acoustic ERP in the comparison group, in the main group and in asthenia group.</title>
+				   <p>*The main components of the curve (P1, N1, P2, N2, P3, N4), whose indices were analyzed, are indicated. Positive deviation of the potential goes down.</p>
+				</caption>
+				<graphic xlink:href="https://e-medjournal.com/suppl/v2_1/tsira/fig1.png"/>
+            </fig>
             <p><bold>Згідно із Міжнародною класифікацією хвороб 10го перегляду (МКX-10)</bold> ГТР характеризується стійкою та поширеною тривогою, яка не обмежується якоюсь однією обставиною. Надмірна тривога та переживання в цьому випадку виникають з приводу великої кількості подій або видів активності. Діагностичні критерії ГТР змінювались разом із зміною переглядів на етіологію та патогенез розладу. Варто виокремити діагностичні критерії згідно МКХ-10 та DSM-5. Незважаючи на те, що в Україні для постановки діагнозу згідно із нормативними документами слід використовувати критерії ВОЗ, Діагностична та статистична настанова психічних розладів Американської психіатричної асоціації є надзвичайно актуальною, оскільки на її основі побудована більшість клінічних шкал для оцінки цього розладу. Це не можна не враховувати при постановці діагнозу.</p>
             <p>Огляд критеріїв МКХ-10 («Diagnostic criteria for research») вказаний в <xref ref-type="table" rid="tbl1">таблиці 1</xref>. Слід зазначити, що станом на сьогодення дослідницькі діагностичні критерії МКХ-10 із рубрики розладів психіки та поведінки досі не перекладені на українську мову.</p>
             
 			<table-wrap id="tbl1" orientation="portrait" position="float" specific-use="rules">
 			<label>Таблиця 1.</label>
 			<caption>
-			<title>
-			Перелік симптомів ГТР згідно із МКХ-10 [<xref ref-type="bibr" rid="bib5">5</xref>]
-			</title>
+			<title>Перелік симптомів ГТР згідно із МКХ-10 [<xref ref-type="bibr" rid="bib5">5</xref>]</title>
             </caption>
                <table frame="hsides" rules="groups">
-			     <tbody>
+			     
                   <tr>
                      <th colspan="2" rowspan="1">А. Напруга, переживання, відчуття тривоги з приводу повсякденних подій та проблем протягом 6 місяців</th>
                   </tr>
@@ -212,7 +219,7 @@
                   <tr>
                      <th colspan="2" rowspan="1">D. Порушення не спровоковане фізичною хворобою, наприклад гіпертиреоїдизмом, вживанням психоактивних речовин </th>
                   </tr>
-				 </tbody>
+				 
                </table>
             </table-wrap>
             <p>DSM-5 відрізняється тим, що надає значно менший спектр симптомів. Зокрема для констатації ГТР необхідна наявність хоча б 3х (а для дітей лише 1) із нижчезазначених симптомів [<xref ref-type="bibr" rid="bib6">6</xref>]:</p>
@@ -527,7 +534,7 @@
 			   <table-wrap id="tbl5" orientation="portrait" position="float" specific-use="rules">
 			   <label>Таблиця 5.</label>
 			   <caption>
-               <title>Порівнянні ефективності КБТ із іншими методами при ГТР [<xref ref-type="bibr" rid="bib25">25</xref>]</title>
+               <title>Порівнянні ефективності КБТ із іншими методами при ГТР [<xref ref-type="bibr" rid="bib25">25</xref>, <xref ref-type="bibr" rid="bib26">26</xref>]</title>
 			   <p>*В даному випадку розмір ефекту оцінювався за методом Ларрі Хеджеса (Larry Hedges), а не методом Коєна; NNT  – тут це кількість пацієнтів, які треба пролікувати за допомогою КБТ, для досягнення одного додаткового випадку клінічної відповіді у порівнянні із вказаним методом</p>
                </caption>
                   <table frame="hsides" rules="groups">
@@ -584,7 +591,7 @@
             </sec>
             <sec id="s4">
             <title>Висновки</title>
-            <p>Генералізований тривожний розлад в силу своїх особливостей, - серйозна проблема, з якою стикається все більша кількість людей. Постійні стреси, перенавантаження, конфлікти, які постійно супроводжують громадян, є стимулюючими факторами в розвитку ГТР. На основі рандомізованих контрольованих досліджень було доведено, що КБТ є більш ефективною за інші види психотерапевтичних інтервенцій та, як мінімум, не менш ефективною ніж фармакотерапія.</p>
+            <p>Генералізований тривожний розлад в силу своїх особливостей, - серйозна проблема, з якою стикається все більша кількість людей. Постійні стреси, перенавантаження, конфлікти, які постійно супроводжують громадян, є стимулюючими факторами в розвитку ГТР. На основі рандомізованих контрольованих досліджень було доведено, що КБТ є більш ефективною за інші види психотерапевтичних інтервенцій та, як мінімум, не менш ефективною ніж фармакотерапія [<xref ref-type="bibr" rid="bib26">26</xref>].</p>
             <p>КБТ, направлена на лікування ГТР, має широкий вибір психологічних технік, які можуть використовуватись у різних «дозах» та комбінаціях. Це дозволяє, незважаючи на високу структурність методу, індивідуалізувати підхід для кожного окремого пацієнта. Однак, слід додати, що навіть КБТ не є ідеальним засобом від ГТР, оскільки доволі великий відсоток пацієнтів не отримують клінічно значимої відповіді на це лікування.</p>
             <p>На сьогоднішній день когнітивно-поведінкова терапія у США та Великобританії є методом лікування першої лінії при наданні допомоги пацієнтам з тривожно-депресивними розладами та, зокрема ГТР. Відповідні рекомендації вказані в настановах Національного інституту здоров’я та клінічного удосконалення (NICE, Великобританія) та Американської психіатричної асоціації (APA, США).</p>
            </sec>  
@@ -700,8 +707,8 @@
 		</element-citation>
 		</ref>
 		
-		<ref id="bib4" publication-type="journal">
-		<element-citation>
+		<ref id="bib4">
+		<element-citation publication-type="journal">
 		<person-group person-group-type="author">
 		<name>
 		<surname>Hunt</surname>
@@ -765,7 +772,7 @@
 		</ref>
 		
 		<ref id="bib7">
-		<element-citation publication-type="book">
+		<element-citation publication-type="chapter">
 		<person-group person-group-type="author">
 		  <name>
 		    <surname>Avedysova</surname>
@@ -840,7 +847,7 @@
 		</ref>
 		
 		<ref id="bib10">
-		<element-citation publication-type="book">
+		<element-citation publication-type="chapter">
 		<person-group person-group-type="author">
 		  <name>
 		    <surname>Kessler</surname>
@@ -1135,7 +1142,7 @@
 		</ref>
 		
 		<ref id="bib24">
-		<element-citation publication-type="journal">
+		<element-citation publication-type="book">
 		<person-group person-group-type="author">
 		<name>
 		<surname>Eskin</surname>
@@ -1187,6 +1194,38 @@
 		<fpage>130</fpage>
 		<lpage>140</lpage>
 		<pub-id pub-id-type="doi">10.1016/j.cpr.2014.01.002</pub-id>
+		</element-citation>
+		</ref>
+		
+		<ref id="bib26">
+		<element-citation publication-type="chapter">
+		<person-group person-group-type="author">
+		  <name>
+		    <surname>Kessler</surname>
+		    <given-names>R</given-names>
+		  </name>
+		  <name>
+		    <surname>Mickelson</surname>
+		    <given-names>K</given-names>
+		  </name>
+		  <name>
+		    <surname>Barber</surname>
+		    <given-names>C</given-names>
+		  </name>
+		</person-group>
+		<chapter-title>
+		The chronic association between medical conditions and work impairment
+		</chapter-title>
+		<person-group person-group-type="editor">
+		  <name>
+		    <surname>Rossi</surname>
+		    <given-names>A</given-names>
+		  </name>
+		</person-group>
+		<source>Caring and doing for others: social responsibility in the domains of family, work and community</source>
+		<publisher-loc>Chicago</publisher-loc>
+        <publisher-name>University of Chicago Press</publisher-name>
+		<year>2001</year>
 		</element-citation>
 		</ref>
 		</ref-list>
