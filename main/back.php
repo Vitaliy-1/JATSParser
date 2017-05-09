@@ -24,9 +24,15 @@ function Back(DOMXPath $xpath): References {
 
             /* check nodes specific for book and chapter */
             $counterForBook = 0;
+            $counterForConference = 0;
             $counterForChapter = 0;
             foreach ($xpath->evaluate("source", $elementCitation) as $bookTitleCheck) {
                 $counterForBook++;
+                foreach ($xpath->evaluate("preceding-sibling::conf-name|following-sibling::conf-name", $bookTitleCheck) as $conferenceTitleCheck) {
+                    if ($bookTitleCheck != null && $conferenceTitleCheck != null) {
+                        $counterForConference++;
+                    }
+                }
                 foreach ($xpath->evaluate("preceding-sibling::chapter-title|following-sibling::chapter-title", $bookTitleCheck) as $chapterTitleCheck) {
                     if ($bookTitleCheck != null && $chapterTitleCheck != null) {
                         $counterForChapter++;
@@ -73,7 +79,7 @@ function Back(DOMXPath $xpath): References {
 
                 parsingUrlDoiPmid($xpath, $elementCitation, $bibitemJournal);
 
-            } elseif ($elementCitation->getAttribute("publication-type") == "book" || ($counterForArticle == 0 && $counterForBook > 0 && $counterForChapter == 0)) {
+            } elseif ($elementCitation->getAttribute("publication-type") == "book" || ($counterForArticle == 0 && $counterForBook > 0 && $counterForChapter == 0 && $counterForConference == 0)) {
                 $bibitemBook = new BibitemBook();
                 $references->getReferences()->offsetSet(null, $bibitemBook);
                 $bibitemBook->setType("book");
@@ -96,6 +102,60 @@ function Back(DOMXPath $xpath): References {
 
                 parsingUrlDoiPmid($xpath, $elementCitation, $bibitemJournal);
 
+            } elseif ($elementCitation->getAttribute("publication-type") == "chapter" || ($counterForArticle == 0 && $counterForBook > 0 && $counterForChapter > 0)) {
+                $bibitemChapter = new BibitemChapter();
+                $references->getReferences()->offsetSet(null, $bibitemChapter);
+                $bibitemChapter->setType("chapter");
+                $bibitemChapter->setId($bibitemNode->getAttribute("id"));
+
+                // parsing author names
+                parsingNamesAndCollabWithEditor($xpath, $elementCitation, $bibitemChapter, "author");
+                // parsing editor names
+                parsingEditors($xpath, $elementCitation, $bibitemChapter, "editor");
+
+                foreach ($xpath->evaluate("chapter-title", $elementCitation) as $chapterTitle) {
+                    $bibitemChapter->setChapterTitle(trim($chapterTitle->nodeValue));
+                }
+                foreach ($xpath->evaluate("source", $elementCitation) as $bookTitle) {
+                    $bibitemChapter->setSource(trim($bookTitle->nodeValue));
+                }
+                foreach ($xpath->evaluate("publisher-loc", $elementCitation) as $bookPublisherLoc) {
+                    $bibitemChapter->setPublisherLoc(trim($bookPublisherLoc->nodeValue));
+                }
+                foreach ($xpath->evaluate("publisher-name", $elementCitation) as $bookPublisherName) {
+                    $bibitemChapter->setPublisherName(trim($bookPublisherName->nodeValue));
+                }
+                foreach ($xpath->evaluate("year", $elementCitation) as $bookYear) {
+                    $bibitemChapter->setYear(trim($bookYear->nodeValue));
+                }
+
+                parsingUrlDoiPmid($xpath, $elementCitation, $bibitemChapter);
+            } elseif ($elementCitation->getAttribute("publication-type") == "conference" || ($counterForConference > 0)) {
+                $bibitemConf = new bibitemConf();
+                $references->getReferences()->offsetSet(null, $bibitemConf);
+                $bibitemConf->setType("conference");
+                $bibitemConf->setId($bibitemNode->getAttribute("id"));
+
+                // parsing author names
+                parsingNamesAndCollab($xpath, $elementCitation, $bibitemConf);
+
+                foreach ($xpath->evaluate("source", $elementCitation) as $confPaperTitle) {
+                    $bibitemConf->setSource(trim($confPaperTitle->nodeValue));
+                }
+                foreach ($xpath->evaluate("conf-name", $elementCitation) as $confName) {
+                    $bibitemConf->setConfName(trim($confName->nodeValue));
+                }
+                foreach ($xpath->evaluate("conf-loc", $elementCitation) as $confLoc) {
+                    $bibitemConf->setConfLoc(trim($confLoc->nodeValue));
+                }
+                foreach ($xpath->evaluate("conf-date", $elementCitation) as $confDate) {
+                    $bibitemConf->setConfDate(trim($confDate->nodeValue));
+                }
+                foreach ($xpath->evaluate("year", $elementCitation) as $confYear) {
+                    $bibitemConf->setYear(trim($confYear->nodeValue));
+                }
+
+                parsingUrlDoiPmid($xpath, $elementCitation, $bibitemConf);
             }
         }
     }
@@ -157,6 +217,77 @@ function parsingNamesAndCollab(DOMXPath $xpath, DOMElement $elementCitation, $bi
         }
     }
     $authorCollabNodes = $xpath->evaluate("person-group/collab", $elementCitation);
+    if ($authorCollabNodes != null) {
+        foreach ($authorCollabNodes as $authorCollabNode) {
+            $bibitemJournal->setCollab(trim($authorCollabNode->nodeValue));
+        }
+    }
+}
+/**
+ * @param DOMXPath $xpath
+ * @param DOMElement $elementCitation
+ * @param BibitemJournal|BibitemChapter|BibitemBook|BibitemConf $bibitemJournal
+ * @param string $authorType
+ */
+function parsingNamesAndCollabWithEditor(DOMXPath $xpath, DOMElement $elementCitation, $bibitemJournal, string $authorType)
+{
+    $authorNamesNodes = $xpath->evaluate("person-group[@person-group-type='" . $authorType . "']/name", $elementCitation);
+    if ($authorNamesNodes != null) {
+        foreach ($authorNamesNodes as $authorNameNode) {
+            $bibName = new BibName();
+            $bibitemJournal->getName()->offsetSet(null, $bibName);
+            foreach ($xpath->evaluate("surname", $authorNameNode) as $surnameNode) {
+                $bibName->setSurname($surnameNode->nodeValue);
+            }
+            foreach ($xpath->evaluate("given-names", $authorNameNode) as $givenNamesNode) {
+                $givenNamesText = trim($givenNamesNode->nodeValue);
+
+                /* check if upper case; if true treat as initials */
+                if (ctype_upper($givenNamesText) == true) {
+                    $bibName->setInitials(str_split($givenNamesText));
+                } else {
+                    $bibName->setGivenname($givenNamesText);
+                }
+            }
+        }
+    }
+    $authorCollabNodes = $xpath->evaluate("person-group[@person-group-type='" . $authorType . "']/collab", $elementCitation);
+    if ($authorCollabNodes != null) {
+        foreach ($authorCollabNodes as $authorCollabNode) {
+            $bibitemJournal->setCollab(trim($authorCollabNode->nodeValue));
+        }
+    }
+}
+
+/**
+ * @param DOMXPath $xpath
+ * @param DOMElement $elementCitation
+ * @param BibitemJournal|BibitemChapter|BibitemBook|BibitemConf $bibitemJournal
+ * @param string $authorType
+ */
+function parsingEditors(DOMXPath $xpath, DOMElement $elementCitation, $bibitemJournal, string $authorType)
+{
+    $authorNamesNodes = $xpath->evaluate("person-group[@person-group-type='" . $authorType . "']/name", $elementCitation);
+    if ($authorNamesNodes != null) {
+        foreach ($authorNamesNodes as $authorNameNode) {
+            $bibName = new BibName();
+            $bibitemJournal->getEditor()->offsetSet(null, $bibName);
+            foreach ($xpath->evaluate("surname", $authorNameNode) as $surnameNode) {
+                $bibName->setSurname($surnameNode->nodeValue);
+            }
+            foreach ($xpath->evaluate("given-names", $authorNameNode) as $givenNamesNode) {
+                $givenNamesText = trim($givenNamesNode->nodeValue);
+
+                /* check if upper case; if true treat as initials */
+                if (ctype_upper($givenNamesText) == true) {
+                    $bibName->setInitials(str_split($givenNamesText));
+                } else {
+                    $bibName->setGivenname($givenNamesText);
+                }
+            }
+        }
+    }
+    $authorCollabNodes = $xpath->evaluate("person-group[@person-group-type='" . $authorType . "']/collab", $elementCitation);
     if ($authorCollabNodes != null) {
         foreach ($authorCollabNodes as $authorCollabNode) {
             $bibitemJournal->setCollab(trim($authorCollabNode->nodeValue));

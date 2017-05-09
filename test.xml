@@ -591,7 +591,7 @@
             </sec>
             <sec id="s4">
             <title>Висновки</title>
-            <p>Генералізований тривожний розлад в силу своїх особливостей, - серйозна проблема, з якою стикається все більша кількість людей. Постійні стреси, перенавантаження, конфлікти, які постійно супроводжують громадян, є стимулюючими факторами в розвитку ГТР. На основі рандомізованих контрольованих досліджень було доведено, що КБТ є більш ефективною за інші види психотерапевтичних інтервенцій та, як мінімум, не менш ефективною ніж фармакотерапія [<xref ref-type="bibr" rid="bib26">26</xref>].</p>
+            <p>Генералізований тривожний розлад в силу своїх особливостей, - серйозна проблема, з якою стикається все більша кількість людей. Постійні стреси, перенавантаження, конфлікти, які постійно супроводжують громадян, є стимулюючими факторами в розвитку ГТР. На основі рандомізованих контрольованих досліджень було доведено, що КБТ є більш ефективною за інші види психотерапевтичних інтервенцій та, як мінімум, не менш ефективною ніж фармакотерапія [<xref ref-type="bibr" rid="bib26">26</xref>, <xref ref-type="bibr" rid="bib27">27</xref>].</p>
             <p>КБТ, направлена на лікування ГТР, має широкий вибір психологічних технік, які можуть використовуватись у різних «дозах» та комбінаціях. Це дозволяє, незважаючи на високу структурність методу, індивідуалізувати підхід для кожного окремого пацієнта. Однак, слід додати, що навіть КБТ не є ідеальним засобом від ГТР, оскільки доволі великий відсоток пацієнтів не отримують клінічно значимої відповіді на це лікування.</p>
             <p>На сьогоднішній день когнітивно-поведінкова терапія у США та Великобританії є методом лікування першої лінії при наданні допомоги пацієнтам з тривожно-депресивними розладами та, зокрема ГТР. Відповідні рекомендації вказані в настановах Національного інституту здоров’я та клінічного удосконалення (NICE, Великобританія) та Американської психіатричної асоціації (APA, США).</p>
            </sec>  
@@ -939,19 +939,19 @@
 		</person-group>
 		<source>The Cognitive Behavioral Workbook for Anxiety: A Step-by-Step Program</source>
 		<publisher-loc>Oakland</publisher-loc>
-		<publication-name>New Harbinger Publications</publication-name>
+		<publisher-name>New Harbinger Publications</publisher-name>
 		<year>2008</year>
 		</element-citation>
 		</ref>
 		
 		<ref id="bib15">
-		<element-citation publication-type="journal">
+		<element-citation publication-type="book">
 		<person-group person-group-type="author">
 		  <collab>National Institute for Health and Care Excellence</collab>
 		</person-group>
 		<source>Generalised anxiety disorder and panic disorder in adults: management</source>
 		<publisher-loc>Manchester</publisher-loc>
-		<publication-name>NICE</publication-name>
+		<publisher-name>NICE</publisher-name>
 		<year>2011</year>
 		<ext-link>https://www.nice.org.uk/guidance/CG113</ext-link>
 		</element-citation>
@@ -1226,6 +1226,24 @@
 		<publisher-loc>Chicago</publisher-loc>
         <publisher-name>University of Chicago Press</publisher-name>
 		<year>2001</year>
+		</element-citation>
+		</ref>
+		
+		<ref id="bib27">
+		<element-citation publication-type="conference">
+		<person-group person-group-type="author">
+		<name>
+		<surname>Popoli</surname>
+		<given-names>M</given-names>
+		</name>
+		</person-group>
+		<source>
+		Stress and antidepressants: time-dependent changes in synaptic function and brain architecture
+		</source>
+		<conf-name>29th ECNP Congress</conf-name>
+		<conf-loc>Vienna, Austria</conf-loc>
+		<conf-date>September 20</conf-date>
+		<year>2016</year>
 		</element-citation>
 		</ref>
 		</ref-list>

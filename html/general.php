@@ -79,6 +79,16 @@ function htmlGeneralStructure(): DOMDocument
     $forcontentCol->setAttribute("id", "article");
     $rowTabContent->appendChild($forcontentCol);
 
+    $tabsForNav1 = $html->createElement("a", "Article");
+    $tabsForNav1->setAttribute("href", "#article");
+    $forcontentCol->appendChild($tabsForNav1);
+    $tabsForNav2 = $html->createElement("a", "Data");
+    $tabsForNav2->setAttribute("href", "#figuresdata");
+    $forcontentCol->appendChild($tabsForNav2);
+    $tabsForNav3 = $html->createElement("a", "Info");
+    $tabsForNav3->setAttribute("href", "#infodata");
+    $forcontentCol->appendChild($tabsForNav3);
+
     $articleContent = $html->createElement("div");
     $articleContent->setAttribute("class", "article-content");
     $forcontentCol->appendChild($articleContent);

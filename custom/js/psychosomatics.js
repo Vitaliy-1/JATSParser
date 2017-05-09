@@ -180,14 +180,17 @@ var refInfo = jQuery.makeArray(document.getElementsByClassName("ref-info"));
 //var refFullText = jQuery.makeArray(document.getElementsByClassName("ref-full"));
 
 for (var i = 0; i < refAuth.length; i++) {
-  refTitle[i] = refTitle[i].innerHTML;
-//  refFullText[i] = refFullText[i].innerHTML;
-};
+	if (refTitle[i] != null) {
+  		refTitle[i] = refTitle[i].innerHTML;
+    }
+}
 
 for (var i = 0; i < refAuth.length; i++) {
-    output = [refAuth[i].innerHTML + ' ' + refSource[i].innerHTML];
-    for (var s = 0; s < output.length; s++) {
-    $("[rid='bib" + (i + 1) + "']").attr("data-content", output);
+	if (refAuth[i] != null && refSource[i] != null) {
+	    output = [refAuth[i].innerHTML + ' ' + refSource[i].innerHTML];
+	    for (var s = 0; s < output.length; s++) {
+	    	$("[rid='bib" + (i + 1) + "']").attr("data-content", output);
+	    }
     }
 };
 
