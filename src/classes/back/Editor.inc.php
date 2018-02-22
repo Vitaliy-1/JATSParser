@@ -4,12 +4,12 @@ require_once (__DIR__ . "/../../interfaces/PersonGroup.inc.php");
 
 use JATSParser\PersonGroup as PersonGroup;
 
-class Author implements PersonGroup {
+class Editor implements PersonGroup {
 
 	/* private $type string : individual, collaboration */
 	private $type;
 
-	public function __construct(\DOMElement $personGroup) {
+	public function __construct() {
 
 	}
 
