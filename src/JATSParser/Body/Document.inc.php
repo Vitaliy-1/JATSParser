@@ -108,6 +108,7 @@ class Document {
 				}
 			}
 		}
+		$this->references = $references;
 	}
 
 	private function extractSections(): void
