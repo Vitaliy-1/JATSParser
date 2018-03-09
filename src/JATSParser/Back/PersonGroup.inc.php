@@ -1,4 +1,4 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Back;
 
 interface PersonGroup {
 

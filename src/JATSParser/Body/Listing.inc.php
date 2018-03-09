@@ -1,11 +1,8 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Body;
 
-require_once(__DIR__ . "/../../interfaces/JATSElement.inc.php");
-require_once("ListItem.inc.php");
-
-use JATSParser\JATSElement as JATSElement;
-use JATSParser\Document as Document;
-use JATSParser\ListItem as ListItem;
+use JATSParser\Body\JATSElement as JATSElement;
+use JATSParser\Body\Document as Document;
+use JATSParser\Body\ListItem as ListItem;
 
 class Listing implements JATSElement {
 

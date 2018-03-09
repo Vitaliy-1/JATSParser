@@ -1,16 +1,10 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Body;
 
-require_once("Section.inc.php");
-require_once(__DIR__ . "/../back/Journal.inc.php");
-require_once(__DIR__ . "/../back/Book.inc.php");
-require_once(__DIR__ . "/../back/Chapter.inc.php");
-require_once(__DIR__ . "/../back/Conference.inc.php");
-
-use JATSParser\Section as Section;
-use JATSParser\Journal as Journal;
-use JATSParser\Book as Book;
-use JATSParser\Chapter as Chapter;
-use JATSParser\Conference as Conference;
+use JATSParser\Body\Section as Section;
+use JATSParser\Back\Journal as Journal;
+use JATSParser\Back\Book as Book;
+use JATSParser\Back\Chapter as Chapter;
+use JATSParser\Back\Conference as Conference;
 
 class Document {
 

@@ -1,12 +1,9 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Body;
 
-require_once(__DIR__ . "/../../interfaces/JATSElement.inc.php");
-require_once("Row.inc.php");
-
-use JATSParser\JATSElement as JATSElement;
-use JATSParser\Document as Document;
-use JATSParser\Row as Row;
-use JATSParser\Text as Text;
+use JATSParser\Body\JATSElement as JATSElement;
+use JATSParser\Body\Document as Document;
+use JATSParser\Body\Row as Row;
+use JATSParser\Body\Text as Text;
 
 class Table implements JATSElement {
 

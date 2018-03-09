@@ -1,6 +1,6 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Body;
 
-use JATSParser\Document as Document;
+use JATSParser\Body\Document as Document;
 
 class Figure implements JATSElement {
 

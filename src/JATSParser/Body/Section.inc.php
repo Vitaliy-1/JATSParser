@@ -1,14 +1,9 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Body;
 
-require_once("Par.inc.php");
-require_once("Listing.inc.php");
-require_once("Table.inc.php");
-require_once("Figure.inc.php");
-
-use JATSParser\Table as Table;
-use JATSParser\Figure as Figure;
-use JATSParser\Listing as Listing;
-use JATSParser\Par as Par;
+use JATSParser\Body\Table as Table;
+use JATSParser\Body\Figure as Figure;
+use JATSParser\Body\Listing as Listing;
+use JATSParser\Body\Par as Par;
 
 class Section implements JATSElement {
 

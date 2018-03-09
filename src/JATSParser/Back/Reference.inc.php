@@ -1,4 +1,4 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Back;
 
 interface Reference {
 
@@ -6,7 +6,7 @@ interface Reference {
 
 	public function getTitle();
 
-	public function getAuthors();
+	public function getPersonGroup();
 
 	public function getYear();
 

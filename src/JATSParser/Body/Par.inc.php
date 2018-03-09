@@ -1,10 +1,8 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Body;
 
-require_once("Text.inc.php");
-
-use JATSParser\JATSElement as JATSElement;
-use JATSParser\Document as Document;
-use JATSParser\Text as Text;
+use JATSParser\Body\JATSElement as JATSElement;
+use JATSParser\Body\Document as Document;
+use JATSParser\Body\Text as Text;
 
 class Par implements JATSElement {
 

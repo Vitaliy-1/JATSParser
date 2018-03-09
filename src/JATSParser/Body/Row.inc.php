@@ -1,9 +1,8 @@
-<?php namespace JATSParser;
-require_once("Cell.inc.php");
+<?php namespace JATSParser\Body;
 
-use JATSParser\JATSElement as JATSElement;
-use JATSParser\Document as Document;
-use JATSParser\Cell as Cell;
+use JATSParser\Body\JATSElement as JATSElement;
+use JATSParser\Body\Document as Document;
+use JATSParser\Body\Cell as Cell;
 
 class Row implements JATSElement {
 

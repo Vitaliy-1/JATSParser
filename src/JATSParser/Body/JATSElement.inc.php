@@ -1,4 +1,4 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Body;
 
 interface JATSElement {
 

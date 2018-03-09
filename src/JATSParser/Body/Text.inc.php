@@ -1,8 +1,6 @@
-<?php namespace JATSParser;
+<?php namespace JATSParser\Body;
 
-require_once(__DIR__ . "/../../interfaces/JATSElement.inc.php");
-
-use JATSParser\JATSElement as JATSElement;
+use JATSParser\Body\JATSElement as JATSElement;
 
 class Text implements JATSElement {
 
@@ -57,7 +55,7 @@ class Text implements JATSElement {
 	}
 
 	/**
-	 * @param DOMText \DOMElement
+	 * @param \DOMText \DOMElement
 	 */
 	private function extractTextNodeModifiers($paragraphContent) {
 		$parentNode = $paragraphContent->parentNode;
