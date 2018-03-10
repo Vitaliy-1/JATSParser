@@ -47,7 +47,7 @@ abstract class AbstractReference implements Reference {
 
 	protected function extractFromElement(\DOMElement $reference, string $xpathExpression)
 	{
-		$property = null;
+		$property = '';
 		$searchNodes = $this->xpath->query($xpathExpression, $reference);
 		if ($searchNodes->length > 0) {
 			foreach ($searchNodes as $searchNode) {
@@ -59,7 +59,7 @@ abstract class AbstractReference implements Reference {
 
 	private function extractId(\DOMElement $reference)
 	{
-		$id = null;
+		$id = '';
 		if ($reference->hasAttribute("id")) {
 			$id = $reference->getAttribute("id");
 		}
