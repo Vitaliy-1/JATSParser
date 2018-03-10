@@ -53,8 +53,6 @@ abstract class AbstractReference implements Reference {
 			foreach ($searchNodes as $searchNode) {
 				$property = $searchNode->nodeValue;
 			}
-		} else {
-			return false;
 		}
 		return $property;
 	}
@@ -64,8 +62,6 @@ abstract class AbstractReference implements Reference {
 		$id = null;
 		if ($reference->hasAttribute("id")) {
 			$id = $reference->getAttribute("id");
-		} else {
-			return false;
 		}
 		return $id;
 	}
@@ -104,10 +100,7 @@ abstract class AbstractReference implements Reference {
 					$pubIdType[$pubIdNode->getAttribute('pub-id-type')] = $pubIdNode->nodeValue;
 				}
 			}
-		} else {
-			return false;
 		}
-
 		return $pubIdType;
 	}
 }
