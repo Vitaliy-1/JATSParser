@@ -25,8 +25,8 @@ class Table implements JATSElement {
 	/* @var $title array */
 	private $title;
 
-	/* @var $caption array */
-	private $caption;
+	/* @var $notes array */
+	private $notes;
 
 	public function __construct(\DOMElement $tableWraper) {
 		$xpath = Document::getXpath();
@@ -54,8 +54,8 @@ class Table implements JATSElement {
 		return $this->title;
 	}
 
-	public function getCaption(): array {
-		return $this->caption;
+	public function getNotes(): array {
+		return $this->notes;
 	}
 
 	private function extractLabel(\DOMElement $tableWraper, \DOMXPath $xpath) {
@@ -120,6 +120,6 @@ class Table implements JATSElement {
 				}
 			}
 		}
-		$this->caption = $caption;
+		$this->notes = $caption;
 	}
 }

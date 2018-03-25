@@ -39,11 +39,20 @@ class Book extends AbstractReference {
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 */
-	public function getPersonGroup(): array
+	public function getAuthors(): array
 	{
-		return $this->personGroup;
+		return $this->authors;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getEditors(): array
+	{
+		return $this->editors;
 	}
 
 	/**

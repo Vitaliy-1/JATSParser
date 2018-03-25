@@ -13,7 +13,7 @@ class Figure implements JATSElement {
 	/* @var $id string */
 	private $id;
 
-	/* @var $content string; figure caption */
+	/* @var $content array; figure caption */
 	private $content;
 
 	/* @var $title array */
@@ -29,7 +29,7 @@ class Figure implements JATSElement {
 		$this->extractContent($figureElement, $xpath);
 	}
 
-	public function getContent(): string {
+	public function getContent(): array {
 		return $this->content;
 	}
 

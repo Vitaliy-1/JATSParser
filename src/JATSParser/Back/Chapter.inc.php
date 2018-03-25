@@ -2,7 +2,8 @@
 
 use JATSParser\Back\AbstractReference as AbstractReference;
 
-class Chapter extends AbstractReference {
+class Chapter extends AbstractReference
+{
 
 	/* @var $title string */
 	private $title;
@@ -22,7 +23,8 @@ class Chapter extends AbstractReference {
 	/* @var $lpage string */
 	private $lpage;
 
-	public function __construct(\DOMElement $reference) {
+	public function __construct(\DOMElement $reference)
+	{
 
 		parent::__construct($reference);
 
@@ -51,11 +53,19 @@ class Chapter extends AbstractReference {
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 */
-	public function getPersonGroup(): array
+	public function getAuthors(): array
 	{
-		return $this->personGroup;
+		return $this->authors;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getEditors(): array
+	{
+		return $this->editors;
 	}
 
 	/**
@@ -96,5 +106,29 @@ class Chapter extends AbstractReference {
 	public function getPubIdType(): array
 	{
 		return $this->pubIdType;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getBook(): string
+	{
+		return $this->book;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPublisherName(): string
+	{
+		return $this->publisherName;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPublisherLoc(): string
+	{
+		return $this->publisherLoc;
 	}
 }

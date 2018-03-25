@@ -21,21 +21,40 @@ class Listing implements JATSElement {
 	public function __construct(\DOMElement $list) {
 		$xpath = Document::getXpath();
 		$content = array();
-		$this->style = $list->getAttribute("list-type");
-		$this->type = 1;
+		$list->hasAttribute("list-type") ? $this->style = $list->getAttribute("list-type") : $this->style = "unordered";
+		$this->type = self::listElementLevel($list);
 
-		$listChildNodes = $xpath->evaluate("list-item/p|list-item", $list);
-
-		foreach ($listChildNodes as $listChildNode) {
-			if ($this->isTextNode($listChildNode) === TRUE) {
-				$listItem = new ListItem($listChildNode);
-				$content[] = $listItem;
+		$listItemNodes = $xpath->query("list-item", $list);
+		foreach ($listItemNodes as $listItemNode) {
+			$listItem = array();
+			$insideListItems = $xpath->query("child::node()", $listItemNode);
+			foreach ($insideListItems as $insideListItem) {
+				if ($insideListItem->nodeName === "p") {
+					$listInsideNodes = $xpath->query("child::node()", $insideListItem);
+					foreach ($listInsideNodes as $listInsideNode) {
+						if ($listInsideNode->nodeName === "list") {
+							$insideListing = new Listing($listInsideNode);
+							$listItem[] = $insideListing;
+						} else {
+							$textNodes = $xpath->query("self::text()|.//text()", $listInsideNode);
+							foreach ($textNodes as $textNode) {
+								/* We must ensure that picking up Text Node from the current list level -> avoiding parsing nested lists */
+								if (self::listElementLevel($textNode) === $this->type) {
+									$jatsText = new Text($textNode);
+									$listItem[] = $jatsText;
+								}
+							}
+						}
+					}
+				} elseif ($insideListItem->nodeName === "list") {
+					$insideList = new Listing($insideListItem);
+					$listItem[] = $insideList;
+				} elseif ($insideListItem->nodeType === XML_ELEMENT_NODE) {
+					$insidePar = new Par($listItemNode);
+					$listItem[] = $insidePar;
+				}
 			}
-			$nestedListNodes = $xpath->evaluate("list", $listChildNode);
-			foreach ($nestedListNodes as $nestedListNode) {
-				$listing = new Listing($nestedListNode);
-				$content[] = $listing;
-			}
+			$content[] = $listItem;
 		}
 
 		$this->content = $content;
@@ -59,11 +78,13 @@ class Listing implements JATSElement {
 		return $this->style;
 	}
 
-	private function isTextNode($listChildNode): bool {
-		if ($listChildNode->nodeType != XML_TEXT_NODE) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+	/**
+	 * @return boolean
+	 */
+
+	private function listElementLevel(\DOMNode $textNode) {
+		$count = preg_match_all("/\blist\b[^-]|\blist\b$/", $textNode->getNodePath(), $mathes);
+		return $count;
 	}
+
 }

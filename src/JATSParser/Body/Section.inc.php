@@ -10,8 +10,11 @@ class Section implements JATSElement {
 	/* section title */
 	private $title;
 
-	/* type os a section: 1, 2, 3, 4 -> what means section, subsection, subsubsection, etc. */
+	/* @var $type int type os a section: 1, 2, 3, 4 -> what means section, subsection, subsubsection, etc. */
 	private $type;
+
+	/* unique section id */
+	private $id;
 
 	private $content;
 
@@ -43,6 +46,11 @@ class Section implements JATSElement {
 
 	public function hasSections() : bool {
 		return $this->hasSections;
+	}
+
+	public function getChildSectionsTitles(): array
+	{
+		return $this->childSectionsTitles;
 	}
 
 	private function extractTitle(\DOMElement $section, \DOMXPath $xpath) {

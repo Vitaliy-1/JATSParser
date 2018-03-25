@@ -4,7 +4,11 @@ use JATSParser\Back\Reference as Reference;
 use JATSParser\Back\Collaboration as Collaboration;
 use JATSParser\Body\Document as Document;
 
-abstract class AbstractReference implements Reference {
+Define('DOI_REFERENCE_PREFIX', 'https://doi.org/');
+Define('PMID_REFERENCE_PREFIX', 'https://www.ncbi.nlm.nih.gov/pubmed/');
+Define('PMCID_REFERENCE_PREFIX', 'https://www.ncbi.nlm.nih.gov/pmc/articles/');
+abstract class AbstractReference implements Reference
+{
 
 	protected $xpath;
 
@@ -12,7 +16,10 @@ abstract class AbstractReference implements Reference {
 	protected $id;
 
 	/* @var array can contain instances of Individual and Collaboration class */
-	protected $personGroup;
+	protected $authors;
+
+	/* @var array can contain instances of Individual and Collaboration class */
+	protected $editors;
 
 	/* @var $year string */
 	protected $year;
@@ -27,7 +34,9 @@ abstract class AbstractReference implements Reference {
 
 	abstract public function getTitle();
 
-	abstract public function getPersonGroup();
+	abstract public function getAuthors();
+
+	abstract public function getEditors();
 
 	abstract public function getYear();
 
@@ -38,9 +47,10 @@ abstract class AbstractReference implements Reference {
 	protected function __construct(\DOMElement $reference)
 	{
 		$this->xpath = Document::getXpath();
-		$this->personGroup = $this->extractPersonGroup($reference);
+		$this->authors = $this->extractAuthors($reference);
+		$this->editors = $this->extractEditors($reference);
 		$this->id = $this->extractId($reference);
-		$this->year = $this->extractFromElement($reference,'.//year[1]');
+		$this->year = $this->extractFromElement($reference, './/year[1]');
 		$this->url = $this->extractFromElement($reference, './/ext-link[@ext-link-type="uri"]');
 		$this->pubIdType = $this->extractPubIdType($reference);
 	}
@@ -66,29 +76,53 @@ abstract class AbstractReference implements Reference {
 		return $id;
 	}
 
-	private function extractPersonGroup(\DOMElement $reference)
+	private function extractAuthors(\DOMElement $reference)
 	{
-		$personGroup = array();
+		$authors = array();
 
-		$nameNodes = $this->xpath->query(".//name", $reference);
+		$nameNodes = $this->xpath->query(".//name|.//collab", $reference);
 		if ($nameNodes->length > 0) {
+			/* @var $nameNode \DOMElement */
 			foreach ($nameNodes as $nameNode) {
-				$individual = new Individual($nameNode);
-				$personGroup[] = $individual;
+				$parentOfName = $nameNode->parentNode;
+				if ($nameNode->nodeName === 'name' && ($parentOfName->nodeName !== 'person-group' || $parentOfName->getAttribute('person-group-type') === 'author')) {
+					$individual = new Individual($nameNode);
+					$authors[] = $individual;
+				} elseif ($nameNode->nodeName === 'collab' && ($parentOfName->nodeName !== 'person-group' || $parentOfName->getAttribute('person-group-type') === 'author')) {
+					$collaborator = new Collaboration($nameNode);
+					$authors[] = $collaborator;
+				}
 			}
 		}
-		$collabNodes = $this->xpath->query(".//collab", $reference);
-		if ($collabNodes->length > 0) {
-			foreach ($collabNodes as $collabNode) {
-				$collaborator = new Collaboration($collabNode);
-				$personGroup[] = $collaborator;
-			}
-		}
-
-		return $personGroup;
+		return $authors;
 	}
 
-	private function extractPubIdType(\DOMElement $reference)
+	private function extractEditors(\DOMElement $reference) {
+		$editors = array();
+
+		$nameNodes = $this->xpath->query(".//name|.//collab", $reference);
+		if ($nameNodes->length > 0) {
+			/* @var $nameNode \DOMElement */
+			foreach ($nameNodes as $nameNode) {
+				$parentOfName = $nameNode->parentNode;
+				if ($nameNode->nodeName === 'name' && $parentOfName->getAttribute('person-group-type') === 'editor') {
+					$individual = new Individual($nameNode);
+					$editors[] = $individual;
+				} elseif ($nameNode->nodeName === 'collab' && $parentOfName->getAttribute('person-group-type') === 'editor') {
+					$collaborator = new Collaboration($nameNode);
+					$editors[] = $collaborator;
+				}
+			}
+		}
+		return $editors;
+	}
+
+	/**
+	 * @return array
+	 * Key => Publication ID Typy (DOI, PMID, PMCID), Value => Valid URL
+	 */
+
+	private function extractPubIdType(\DOMElement $reference): array
 	{
 		$pubIdType = array();
 
@@ -97,7 +131,22 @@ abstract class AbstractReference implements Reference {
 			/* @var $pubIdNode \DOMElement */
 			foreach ($pubIdNodes as $pubIdNode) {
 				if ($pubIdNode->getAttribute('pub-id-type')) {
-					$pubIdType[$pubIdNode->getAttribute('pub-id-type')] = $pubIdNode->nodeValue;
+					/* Ideally, we should retrieve Pub ID Type as a key  and URL here as an array value */
+					$pubIdKey = $pubIdNode->getAttribute('pub-id-type');
+					$pubIdValue = $pubIdNode->nodeValue;
+
+					switch (trim($pubIdKey)) {
+						/* TODO It's quite probably that we will need additional checks here */
+						case "doi":
+							filter_var($pubIdValue, FILTER_VALIDATE_URL) ? $pubIdType[$pubIdKey] = $pubIdValue : $pubIdType[$pubIdKey] = DOI_REFERENCE_PREFIX . trim($pubIdValue);
+							break;
+						case "pmid":
+							filter_var($pubIdValue, FILTER_VALIDATE_URL) ? $pubIdType[$pubIdKey] = $pubIdValue : $pubIdType[$pubIdKey] = PMID_REFERENCE_PREFIX . trim($pubIdValue);
+							break;
+						case "pmcid":
+							filter_var($pubIdValue, FILTER_VALIDATE_URL) ? $pubIdType[$pubIdKey] = $pubIdValue : $pubIdType[$pubIdKey] = PMCID_REFERENCE_PREFIX . trim($pubIdValue);
+							break;
+					}
 				}
 			}
 		}

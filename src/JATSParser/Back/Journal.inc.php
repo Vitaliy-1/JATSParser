@@ -2,10 +2,14 @@
 
 use JATSParser\Back\AbstractReference as AbstractReference;
 
-class Journal extends AbstractReference {
+class Journal extends AbstractReference
+{
 
 	/* @var $title string */
 	private $title;
+
+	/* @var $journal string */
+	private $journal;
 
 	/* @var $volume string */
 	private $volume;
@@ -19,11 +23,13 @@ class Journal extends AbstractReference {
 	/* @var $lpage string */
 	private $lpage;
 
-	public function __construct(\DOMElement $reference) {
+	public function __construct(\DOMElement $reference)
+	{
 
 		parent::__construct($reference);
 
 		$this->title = $this->extractFromElement($reference, ".//article-title[1]");
+		$this->journal = $this->extractFromElement($reference, ".//source[1]");
 		$this->volume = $this->extractFromElement($reference, ".//volume[1]");
 		$this->issue = $this->extractFromElement($reference, ".//issue[1]");
 		$this->fpage = $this->extractFromElement($reference, ".//fpage[1]");
@@ -47,11 +53,20 @@ class Journal extends AbstractReference {
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 */
-	public function getPersonGroup(): array
+	public function getAuthors(): array
 	{
-		return $this->personGroup;
+		return $this->authors;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getEditors(): array
+	{
+		return $this->editors;
 	}
 
 	/**
@@ -108,5 +123,13 @@ class Journal extends AbstractReference {
 	public function getUrl(): string
 	{
 		return $this->url;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getJournal(): string
+	{
+		return $this->journal;
 	}
 }

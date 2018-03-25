@@ -6,7 +6,9 @@ interface Reference {
 
 	public function getTitle();
 
-	public function getPersonGroup();
+	public function getAuthors();
+
+	public function getEditors();
 
 	public function getYear();
 

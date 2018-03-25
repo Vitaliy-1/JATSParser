@@ -12,6 +12,12 @@ class Cell implements JATSElement {
 	/* @var $type string  */
 	private $type;
 
+	/* @var $colspan int  */
+	private $colspan;
+
+	/* @var $rowspan int  */
+	private $rowspan;
+
 	function __construct(\DOMElement $cellNode) {
 		$this->type = $cellNode->nodeName;
 
@@ -32,13 +38,42 @@ class Cell implements JATSElement {
 		}
 
 		$this->content = $content;
+
+		$cellNode->hasAttribute("colspan") ? $this->colspan = $cellNode->getAttribute("colspan") : $this->colspan = 1;
+
+		$cellNode->hasAttribute("rowspan") ? $this->rowspan = $cellNode->getAttribute("rowspan") : $this->rowspan = 1;
+
 	}
+
+	/**
+	 * @return array
+	 */
 
 	public function getContent(): array {
 		return $this->content;
 	}
 
+	/**
+	 * @return string
+	 */
+
 	public function getType(): string {
 		return $this->type;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getColspan(): int
+	{
+		return $this->colspan;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getRowspan(): int
+	{
+		return $this->rowspan;
 	}
 }

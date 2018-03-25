@@ -1,6 +1,7 @@
 <?php namespace JATSParser\Body;
 
 use JATSParser\Body\JATSElement as JATSElement;
+use JATSParser\Body\Document as Document;
 
 class Text implements JATSElement {
 
@@ -8,10 +9,7 @@ class Text implements JATSElement {
 	 * defines the type of a paragraph content, possible options are:
 	 * normal
 	 * bold
-	 * italic
-	 * ref-table
-	 * ref-figure
-	 * ref-citation
+	 * xref -> 2 dimensional array where key is actual xref element's attribute and value - it's value
 	 * sup
 	 * sub
 	 */
@@ -20,7 +18,7 @@ class Text implements JATSElement {
 
 	private $content;
 
-	private static $nodeCheck = array("bold", "italic", "sup", "sub", "xref", "underline");
+	private static $nodeCheck = array("bold", "italic", "sup", "sub", "xref", "underline", "monospace", "ext-link");
 
 	public function __construct(\DOMText $paragraphContent) {
 		$this->content = $paragraphContent->textContent;
@@ -29,7 +27,6 @@ class Text implements JATSElement {
 		if ($this->type === NULL) {
 			$this->type[] = "normal";
 		}
-
 	}
 
 	/**
@@ -58,10 +55,21 @@ class Text implements JATSElement {
 	 * @param \DOMText \DOMElement
 	 */
 	private function extractTextNodeModifiers($paragraphContent) {
+		/* @var $parentNode \DOMElement */
 		$parentNode = $paragraphContent->parentNode;
 		if (in_array($parentNode->nodeName, self::$nodeCheck)) {
 			$this->extractTextNodeModifiers($parentNode);
-			$this->type[] = $parentNode->nodeName;
+			if ($parentNode->nodeName === 'xref' || $parentNode->nodeName === 'ext-link') {
+				$attributes = Document::getXpath()->query('@*', $parentNode);
+				/* Need to rewrite DOMNodeList to a simple associative array */
+				$xrefAttributes = array();
+				foreach ($attributes as $attribute => $value) {
+					$xrefAttributes[$value->nodeName] = $value->nodeValue;
+				}
+				$this->type[$parentNode->nodeName] = $xrefAttributes;
+			} else {
+				$this->type[] = $parentNode->nodeName;
+			}
 		}
 
 		/* text inside table cells needs special treatment */

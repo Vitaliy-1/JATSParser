@@ -36,6 +36,8 @@ class Individual implements PersonGroup {
 		$personGroupType = $parentNode->getAttribute('person-group-type');
 		if (isset($personGroupType)) {
 			$this->type = $personGroupType;
+		} else {
+			$this->type = 'author';
 		}
 
 	}
