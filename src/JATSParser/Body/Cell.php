@@ -4,7 +4,7 @@ use JATSParser\Body\JATSElement as JATSElement;
 use JATSParser\Body\Text as Text;
 use JATSParser\Body\Par as Par;
 
-class Cell implements JATSElement {
+class Cell extends AbstractElement {
 
 	/* @var array Can contain Par and Text */
 	private $content = array();
@@ -19,6 +19,8 @@ class Cell implements JATSElement {
 	private $rowspan;
 
 	function __construct(\DOMElement $cellNode) {
+		parent::__construct($cellNode);
+		
 		$this->type = $cellNode->nodeName;
 
 		$content = array();

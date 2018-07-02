@@ -2,7 +2,7 @@
 
 use JATSParser\Body\Document as Document;
 
-class Figure implements JATSElement {
+class Figure extends AbstractElement {
 
 	/* @var $label string */
 	private $label;
@@ -20,13 +20,14 @@ class Figure implements JATSElement {
 	private $title;
 
 	public function __construct(\DOMElement $figureElement) {
-		$xpath = Document::getXpath();
-
-		$this->extractLabel($figureElement, $xpath);
-		$this->extractId($figureElement);
-		$this->extractLink($figureElement, $xpath);
-		$this->extractTitle($figureElement, $xpath);
-		$this->extractContent($figureElement, $xpath);
+		parent::__construct($figureElement);
+		
+		$this->label = $this->extractFromElement($figureElement, ".//label");
+		$this->link = $this->extractFromElement($figureElement, ".//graphic/@xlink:href");
+		$this->id = $this->extractFromElement($figureElement, "./@id");
+		$this->title = $this->extractTitleOrCaption($figureElement, self::JATS_EXTRACT_TITLE);
+		$this->content = $this->extractTitleOrCaption($figureElement, self::JATS_EXTRACT_CAPTION);
+		
 	}
 
 	public function getContent(): array {
@@ -47,57 +48,5 @@ class Figure implements JATSElement {
 
 	public function getLabel(): string {
 		return $this->label;
-	}
-
-	private function extractLabel(\DOMElement $figureElement, \DOMXPath $xpath){
-		$labelElements = $xpath->query(".//label", $figureElement);
-		if ($labelElements->length > 0) {
-			foreach ($labelElements as $labelElement) {
-				$this->label = $labelElement->nodeValue;
-			}
-		}
-	}
-
-	private function extractId(\DOMElement $figureElement) {
-		if ($figureElement->hasAttribute("id")) {
-			$this->id = $figureElement->getAttribute("id");
-		}
-	}
-
-	private function extractLink(\DOMElement $figureElement, \DOMXPath $xpath) {
-		$graphicElementAttributes = $xpath->query(".//graphic[1]/@xlink:href", $figureElement);
-		if ($graphicElementAttributes->length > 0) {
-			foreach ($graphicElementAttributes as $link) {
-				$this->link = $link->nodeValue;
-			}
-		}
-	}
-
-	private function extractTitle(\DOMElement $figureElement, \DOMXPath $xpath) {
-		$title = array();
-		$titleElements = $xpath->query(".//title[1]//text()", $figureElement);
-		if ($titleElements->length > 0) {
-			foreach ($titleElements as $titleElement) {
-				$jatsText = new Text($titleElement);
-				$title[] = $jatsText;
-			}
-		}
-		$this->title = $title;
-	}
-
-	/* Note: we are getting figure caption here from JATS */
-	private function extractContent(\DOMElement $figureElement, \DOMXPath $xpath) {
-		$content = array();
-		$captionNodes =  $xpath->query(".//caption[1]", $figureElement);
-		if ($captionNodes->length > 0) {
-			foreach ($captionNodes as $captionNode) {
-				$captionPars = $xpath->query("p", $captionNode);
-				foreach ($captionPars as $captionPar) {
-					$par = new Par($captionPar);
-					$caption[] = $par;
-				}
-			}
-		}
-		$this->content = $content;
 	}
 }

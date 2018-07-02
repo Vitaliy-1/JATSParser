@@ -14,22 +14,22 @@ class Document {
 	/* @var $xpath \DOMXPath */
 	private static $xpath;
 
-	/* @var $documentPath string */
+	/* @var $documentPath \String */
 	private $documentPath;
 
-	/* var $articleSections array of Sections */
-	private $articleSections = array();
+	/* var $articleSections array */
+	private $articleContent = array();
 
 	/* var $references array of article's References */
 	private $references = array();
 
 
-	function __construct(string $documentPath) {
+	function __construct(?string $documentPath) {
 		$document = new \DOMDocument;
 		$this->document = $document->load($documentPath);
 		self::$xpath = new \DOMXPath($document);
 
-		$this->extractSections();
+		$this->extractContent();
 		$this->extractReferences();
 	}
 
@@ -42,7 +42,7 @@ class Document {
 	}
 
 	public function getArticleSections() : array {
-		return $this->articleSections;
+		return $this->articleContent;
 	}
 
 	public function getReferences() : array {
@@ -111,14 +111,40 @@ class Document {
 		$this->references = $references;
 	}
 
-	private function extractSections(): void
+	private function extractContent(): void
 	{
-		$articleSections = array();
-		foreach (self::$xpath->evaluate("/article/body//sec") as $section) {
-			$articleSection = new Section($section);
-			$articleSections[] = $articleSection;
+		$articleContent = array();
+		foreach (self::$xpath->evaluate("/article/body") as $body) {
+			foreach (self::$xpath->evaluate(".//sec|./p|./list|./table-wrap|./fig|./media", $body) as $content) {
+				switch ($content->nodeName) {
+					case "sec":
+						$articleSection = new Section($content);
+						$articleContent[] = $articleSection;
+						break;
+					case "p":
+						$par = new Par($content);
+						$articleContent[] = $par;
+						break;
+					case "list":
+						$list = new Listing($content);
+						$articleContent[] = $list;
+						break;
+					case "table-wrap":
+						$table = new Table($content);
+						$articleContent[] = $table;
+						break;
+					case "fig":
+						$figure = new Figure($content);
+						$articleContent[] = $figure;
+						break;
+					case "media":
+						$media = new Media($content);
+						$articleContent[] = $media;
+						break;
+				}
+			}
 		}
-		$this->articleSections = $articleSections;
+		$this->articleContent = $articleContent;
 	}
 
 }

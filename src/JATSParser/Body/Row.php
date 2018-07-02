@@ -4,7 +4,7 @@ use JATSParser\Body\JATSElement as JATSElement;
 use JATSParser\Body\Document as Document;
 use JATSParser\Body\Cell as Cell;
 
-class Row implements JATSElement {
+class Row extends AbstractElement {
 
 	/* @var $content array */
 	private $content;
@@ -16,6 +16,8 @@ class Row implements JATSElement {
 	private $type;
 
 	public function __construct(\DOMElement $rowNode) {
+		parent::__construct($rowNode);
+		
 		$rowParents = $rowNode->parentNode;
 		switch ($rowParents->nodeName) {
 			case "thead":
@@ -29,11 +31,11 @@ class Row implements JATSElement {
 				break;
 			default:
 				$this->type = 3;
+				break;
 		}
-
-		$xpath = Document::getXpath();
+		
 		$content = array();
-		$cellNodes = $xpath->query(".//td|.//th", $rowNode);
+		$cellNodes = $this->xpath->query(".//td|.//th", $rowNode);
 		foreach ($cellNodes as $cellNode) {
 			$cell = new Cell($cellNode);
 			$content[] = $cell;

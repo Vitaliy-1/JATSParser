@@ -2,9 +2,9 @@
 
 use JATSParser\Body\JATSElement as JATSElement;
 use JATSParser\Body\Document as Document;
-use JATSParser\Body\ListItem as ListItem;
+use JATSParser\Body\Text as Text;
 
-class Listing implements JATSElement {
+class Listing extends AbstractElement {
 
 	/*
 	 * @var int
@@ -26,34 +26,31 @@ class Listing implements JATSElement {
 
 		$listItemNodes = $xpath->query("list-item", $list);
 		foreach ($listItemNodes as $listItemNode) {
-			$listItem = array();
+			$listItem = array(); // represents list item
 			$insideListItems = $xpath->query("child::node()", $listItemNode);
-			foreach ($insideListItems as $insideListItem) {
-				if ($insideListItem->nodeName === "p") {
-					$listInsideNodes = $xpath->query("child::node()", $insideListItem);
-					foreach ($listInsideNodes as $listInsideNode) {
-						if ($listInsideNode->nodeName === "list") {
-							$insideListing = new Listing($listInsideNode);
-							$listItem[] = $insideListing;
-						} else {
-							$textNodes = $xpath->query("self::text()|.//text()", $listInsideNode);
-							foreach ($textNodes as $textNode) {
-								/* We must ensure that picking up Text Node from the current list level -> avoiding parsing nested lists */
-								if (self::listElementLevel($textNode) === $this->type) {
-									$jatsText = new Text($textNode);
-									$listItem[] = $jatsText;
-								}
-							}
+
+			foreach ($insideListItems as $insideJatsListItem) {
+
+				if ($insideJatsListItem->nodeName === "p"){
+					$par = new Par($insideJatsListItem);
+					$listItem[] = $par;
+
+				} elseif ($insideJatsListItem->nodeName === "list") {
+					$insideListing = new Listing($insideJatsListItem);
+					$listItem[] = $insideListing;
+				} else {
+					$listItemTexts = $xpath->query("self::text()|.//text()", $insideJatsListItem);
+					foreach ($listItemTexts as $listItemText) {
+						/* We must ensure that picking up Text Node from the current list level -> avoiding parsing nested lists */
+						if (self::listElementLevel($listItemText) === $this->type) {
+							$jatsText = new Text($listItemText);
+							$listItem[] = $jatsText;
 						}
 					}
-				} elseif ($insideListItem->nodeName === "list") {
-					$insideList = new Listing($insideListItem);
-					$listItem[] = $insideList;
-				} elseif ($insideListItem->nodeType === XML_ELEMENT_NODE) {
-					$insidePar = new Par($listItemNode);
-					$listItem[] = $insidePar;
 				}
+
 			}
+
 			$content[] = $listItem;
 		}
 

@@ -5,7 +5,7 @@ use JATSParser\Body\Figure as Figure;
 use JATSParser\Body\Listing as Listing;
 use JATSParser\Body\Par as Par;
 
-class Section implements JATSElement {
+class Section extends AbstractElement {
 
 	/* section title */
 	private $title;
@@ -16,6 +16,7 @@ class Section implements JATSElement {
 	/* unique section id */
 	private $id;
 
+	/* @var $content array */
 	private $content;
 
 	private $hasSections;
@@ -23,13 +24,14 @@ class Section implements JATSElement {
 	private $childSectionsTitles = array();
 
 	function __construct(\DOMElement $section) {
-
-		$xpath = Document::getXpath();
-
-		$this->extractTitle($section, $xpath);
-		$this->extractType($section, $xpath);
-		$this->ifHasSections($section, $xpath);
-		$this->extractContent($section,$xpath);
+		parent::__construct($section);
+		
+		$this->title = $this->extractFromElement($section, "title");
+		$this->id = $this->extractFromElement($section, "./@id");
+		
+		$this->extractType($section);
+		$this->ifHasSections($section);
+		$this->extractContent($section);
 	}
 
 	public function getTitle() : string {
@@ -53,41 +55,33 @@ class Section implements JATSElement {
 		return $this->childSectionsTitles;
 	}
 
-	private function extractTitle(\DOMElement $section, \DOMXPath $xpath) {
-		$titleElements = $xpath->query("title[1]", $section);
-		if ($titleElements->length > 0) {
-			foreach ($titleElements as $titleElement) {
-				$this->title = $titleElement->nodeValue;
-			}
-		}
-	}
-
-	private function extractType(\DOMElement $section, \DOMXPath $xpath) {
-		$parentElements = $xpath->query("parent::sec", $section);
+	
+	private function extractType(\DOMElement $section) {
+		$parentElements = $this->xpath->query("parent::sec", $section);
 		if (!is_null($parentElements)) {
 			$this->type += 1;
 			foreach ($parentElements as $parentElement) {
-				$this->extractType($parentElement, $xpath);
+				$this->extractType($parentElement);
 			}
 		}
 	}
 
-	private function ifHasSections (\DOMElement $section, \DOMXPath $xpath) {
-		$childSections = $xpath->query("sec", $section);
+	private function ifHasSections (\DOMElement $section) {
+		$childSections = $this->xpath->query("sec", $section);
 		if ($childSections->length > 0) {
 			$this->hasSections = true;
 		} else {
 			$this->hasSections = false;
 		}
-		$sectionsTitles = $xpath->query("sec/title", $section);
+		$sectionsTitles = $this->xpath->query("sec/title", $section);
 		foreach ($sectionsTitles as $sectionsTitle) {
 			$this->childSectionsTitles[] = $sectionsTitle->textContent;
 		}
 	}
 
-	private function extractContent (\DOMElement $section, \DOMXPath $xpath) {
+	private function extractContent (\DOMElement $section) {
 		$content = array();
-		$sectionNodes = $xpath->evaluate("./node()", $section);
+		$sectionNodes = $this->xpath->evaluate("./node()", $section);
 		foreach ($sectionNodes as $sectionElement) {
 			switch ($sectionElement->nodeName) {
 				case "p":
@@ -105,6 +99,10 @@ class Section implements JATSElement {
 				case "fig":
 					$figure = new Figure($sectionElement);
 					$content[] = $figure;
+					break;
+				case "media":
+					$media = new Media($sectionElement);
+					$content[] = $media;
 					break;
 			}
 		}

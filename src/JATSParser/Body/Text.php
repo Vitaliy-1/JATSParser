@@ -66,7 +66,7 @@ class Text implements JATSElement {
 				foreach ($attributes as $attribute => $value) {
 					$xrefAttributes[$value->nodeName] = $value->nodeValue;
 				}
-				$this->type[$parentNode->nodeName] = $xrefAttributes;
+				$this->type[][$parentNode->nodeName] = $xrefAttributes;
 			} else {
 				$this->type[] = $parentNode->nodeName;
 			}
