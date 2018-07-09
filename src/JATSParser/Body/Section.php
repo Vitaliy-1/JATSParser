@@ -34,7 +34,7 @@ class Section extends AbstractElement {
 		$this->extractContent($section);
 	}
 
-	public function getTitle() : string {
+	public function getTitle() : ?string {
 		return $this->title;
 	}
 

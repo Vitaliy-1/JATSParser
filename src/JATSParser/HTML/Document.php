@@ -131,9 +131,11 @@ class Document extends \DOMDocument {
 					$media->setContent($articleSection);
 					break;
 				case "JATSParser\Body\Section":
-					$sectionElement = $this->createElement("h" . ($articleSection->getType() + 1), $articleSection->getTitle());
-					$sectionElement->setAttribute("class", "article-section-title");
-					$this->appendChild($sectionElement);
+					if ($articleSection->getTitle()) {
+						$sectionElement = $this->createElement("h" . ($articleSection->getType() + 1), $articleSection->getTitle());
+						$sectionElement->setAttribute("class", "article-section-title");
+						$this->appendChild($sectionElement);
+					}
 					$this->extractContent($articleSection->getContent());
 					break;
 			}
