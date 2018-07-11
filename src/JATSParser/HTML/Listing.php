@@ -24,7 +24,7 @@ class Listing extends \DOMElement {
 					HTMLText::extractText($jatsListText, $listItem);
 				} elseif (get_class($jatsListText) === "JATSParser\Body\Listing") {
 					/* @var $jatsListText JATSListing */
-					$nestedList = new Listing($jatsListText->getType());
+					$nestedList = new Listing($jatsListText->getStyle());
 					$listItem->appendChild($nestedList);
 					$nestedList->setContent($jatsListText);
 				} elseif (get_class($jatsListText) === "JATSParser\Body\Par") {
