@@ -82,8 +82,8 @@ class Text {
 
 			// Dealing with complex cases -> text with several properties
 		} else {
-			/* @var $prevElement \DOMElement */
-			$prevElement = null;
+			/* @var $prevElement array of DOMElements */
+			$prevElements = array();
 			foreach ($typeArray as $key => $type) {
 				if (!is_array($type)) {
 					$nodeElement = $domDocument->createElement($type);
@@ -97,14 +97,19 @@ class Text {
 						}
 					}
 				}
+				
+				array_push($prevElements, $nodeElement);
+				
 				if ($key === 0) {
-					$prevElement = $nodeElement;
-					$domElement->appendChild($prevElement);
-				} elseif ($key === (count($typeArray) - 1 )) {
-					$nodeElement->nodeValue = trim($jatsText->getContent());
-					$prevElement->appendChild($nodeElement);
-				} else {
-					$prevElement->appendChild($nodeElement);
+					$domElement->appendChild($prevElements[0]);
+				} elseif (($key === (count($typeArray) - 1))) {
+					$nodeElement->nodeValue = $jatsText->getContent();
+					
+					foreach ($prevElements as $prevKey => $prevElement) {
+						if ($prevKey !== (count($prevElements) -1)) {
+							$prevElement->appendChild(next($prevElements));
+						}
+					}
 				}
 			}
 		}
