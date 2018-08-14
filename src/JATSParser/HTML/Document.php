@@ -6,7 +6,7 @@ use JATSParser\HTML\Listing as Listing;
 
 class Document extends \DOMDocument {
 
-	public function __construct(JATSDocument $jatsDocument) {
+	public function __construct(JATSDocument $jatsDocument, , bool $parseReferences = true) {
 		parent::__construct('1.0', 'utf-8');
 		$this->preserveWhiteSpace = false;
 		$this->formatOutput = true;
@@ -14,7 +14,7 @@ class Document extends \DOMDocument {
 		$articleSections = $jatsDocument->getArticleSections();
 		$this->extractContent($articleSections);
 
-		if ($jatsDocument->getReferences()) $this->extractReferences($jatsDocument->getReferences());
+		if ($jatsDocument->getReferences() && $parseReferences) $this->extractReferences($jatsDocument->getReferences());
 	}
 	
 	public function getHmtlForGalley() {
