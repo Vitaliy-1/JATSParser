@@ -18,8 +18,8 @@ class Book extends AbstractReference {
 		parent::__construct($reference);
 
 		$this->title = $this->extractFromElement($reference, ".//source[1]");
-		$this->publisherLoc = $this->extractFromElement($reference, ".//publisher-name[1]");
-		$this->publisherName = $this->extractFromElement($reference, ".//publisher-loc[1]");
+		$this->publisherLoc = $this->extractFromElement($reference, ".//publisher-loc[1]");
+		$this->publisherName = $this->extractFromElement($reference, ".//publisher-name[1]");
 		$this->url = $this->extractFromElement($reference, ".//ext-link[1]");
 	}
 
