@@ -45,14 +45,14 @@ class Individual implements PersonGroup {
 	/**
 	 * @return string
 	 */
-	public function getType(): string {
+	public function getType(): ?string {
 		return $this->type;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getSurname()
+	public function getSurname(): ?string
 	{
 		return $this->surname;
 	}
@@ -60,7 +60,7 @@ class Individual implements PersonGroup {
 	/**
 	 * @return string
 	 */
-	public function getGivenNames(): string
+	public function getGivenNames(): ?string
 	{
 		return $this->givenNames;
 	}
