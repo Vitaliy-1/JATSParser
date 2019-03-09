@@ -6,7 +6,7 @@ use JATSParser\HTML\Listing as Listing;
 
 class Document extends \DOMDocument {
 
-	public function __construct(JATSDocument $jatsDocument, , bool $parseReferences = true) {
+	public function __construct(JATSDocument $jatsDocument, $parseReferences = true) {
 		parent::__construct('1.0', 'utf-8');
 		$this->preserveWhiteSpace = false;
 		$this->formatOutput = true;
@@ -16,7 +16,7 @@ class Document extends \DOMDocument {
 
 		if ($jatsDocument->getReferences() && $parseReferences) $this->extractReferences($jatsDocument->getReferences());
 	}
-	
+
 	public function getHmtlForGalley() {
 		return $this->saveHTML();
 	}
@@ -44,7 +44,7 @@ class Document extends \DOMDocument {
 		foreach ($headerTwos as $headerTwo) {
 			$headerTwo->setAttribute("style", "color: #343a40; font-size: 16px;");
 		}
-		
+
 		// set style for figures and table
 		$tableNodes = $xpath->evaluate("//table");
 		foreach ($tableNodes as $tableNode) {
@@ -52,9 +52,9 @@ class Document extends \DOMDocument {
 			$tableNode->setAttribute("border", "1");
 			$tableNode->setAttribute("cellpadding", "2");
 		}
-		
+
 		$captionNodes = $xpath->evaluate("//figure/p[@class=\"caption\"]|//table/caption");
-		
+
 		foreach ($captionNodes as $captionNode) {
 			$captionNode->setAttribute("style", "font-size:10px;display:block;");
 			$forBoldNodes = $xpath->evaluate("span[@class=\"label\"]", $captionNode);
@@ -74,7 +74,7 @@ class Document extends \DOMDocument {
 				$forNotesNode->setAttribute("style", "font-size:10px;");
 			}
 		}
-		
+
 		$tableCaptions = $xpath->evaluate("//table/caption");
 		foreach ($tableCaptions as $tableCaption) {
 			/* @var $tableNode \DOMNode */
@@ -85,7 +85,7 @@ class Document extends \DOMDocument {
 				$tableNode->parentNode->insertBefore($divNode, $nextToTableNode);
 			}
 			$divNode->appendChild($tableCaption);
-			
+
 		}
 
 		// final preparations
