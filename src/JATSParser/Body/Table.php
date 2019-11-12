@@ -30,17 +30,17 @@ class Table extends AbstractElement {
 
 	public function __construct(\DOMElement $tableWraper) {
 		parent::__construct($tableWraper);
-		
+
 		$this->label = $this->extractFromElement($tableWraper, ".//label");
 		$this->link = $this->extractFromElement($tableWraper, "./@xlink:href");
 		$this->id = $this->extractFromElement($tableWraper, "./@id");
 		$this->title = $this->extractTitleOrCaption($tableWraper, self::JATS_EXTRACT_TITLE);
 		$this->notes = $this->extractTitleOrCaption($tableWraper, self::JATS_EXTRACT_CAPTION);
-		
+
 		$this->extractContent($tableWraper);
 	}
 
-	public function getContent(): array {
+	public function getContent(): ?array {
 		return $this->content;
 	}
 
@@ -52,15 +52,15 @@ class Table extends AbstractElement {
 		return $this->label;
 	}
 
-	public function getTitle(): array {
+	public function getTitle(): ?array {
 		return $this->title;
 	}
 
-	public function getNotes(): array {
+	public function getNotes(): ?array {
 		return $this->notes;
 	}
-	
-	
+
+
 	private function extractContent(\DOMElement $tableWraper) {
 		$content = array();
 
@@ -85,5 +85,5 @@ class Table extends AbstractElement {
 		}
 		$this->content = $content;
 	}
-	
+
 }
