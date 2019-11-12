@@ -10,7 +10,7 @@ class Listing extends \DOMElement {
 
 	public function __construct(string $type) {
 
-		($type === "unordered") ? parent::__construct("ul") : parent::__construct("ol");
+		($type === "unordered" || $type === "bullet") ? parent::__construct("ul") : parent::__construct("ol");
 
 	}
 
