@@ -15,6 +15,8 @@ class Figure extends \DOMElement {
 
 	public function setContent(JATSFigure $jatsFigure) {
 		
+		// Set "id" attribute for <figure> tag. Needed for links from referenceces to the figure 		
+		$this->setAttribute("id", $jatsFigure->getId());		
 		// Add image wrapped inside div (to avoid issues with overlapping by caption)
 		$divNode = $this->ownerDocument->createElement("div");
 		$divNode->setAttribute("class", "figure");

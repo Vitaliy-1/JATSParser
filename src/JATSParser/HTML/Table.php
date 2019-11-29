@@ -15,6 +15,9 @@ class Table extends \DOMElement {
 	}
 
 	public function setContent(JATSTable $jatsTable) {
+		
+		// Set "id" attribute for <table-wrap> tag. Needed for links from referenceces to the table		
+		$this->setAttribute("id", $jatsTable->getId());
 
 		// Converting table head
 
