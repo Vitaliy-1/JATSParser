@@ -62,9 +62,11 @@ class Table extends \DOMElement {
 		// Retrieving caption
 		$titleNode = $this->ownerDocument->createElement("caption");
 		$this->appendChild($titleNode);
+
+        // Set table id for table-wrap. Needed for links from referenceces to the table
+        $this->setAttribute("id", $jatsTable->getId());
 		
 		// Set figure label (e.g., Figure 1)
-		
 		if ($jatsTable->getLabel()) {
 			$spanLabel = $this->ownerDocument->createElement("span");
 			$spanLabel->setAttribute("class", "label");

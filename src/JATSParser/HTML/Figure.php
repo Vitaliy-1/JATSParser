@@ -28,9 +28,11 @@ class Figure extends \DOMElement {
 		$titleNode = $this->ownerDocument->createElement("p");
 		$titleNode->setAttribute("class", "caption");
 		$this->appendChild($titleNode);
-		
+
+        // Set figure id. Needed for links from referenceces to the figure
+        $this->setAttribute("id", $jatsFigure->getId());
+
 		// Set figure label (e.g., Figure 1)
-		
 		if ($jatsFigure->getLabel()) {
 			$spanLabel = $this->ownerDocument->createElement("span");
 			$spanLabel->setAttribute("class", "label");
