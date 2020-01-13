@@ -51,6 +51,16 @@ class Text {
 									}
 								}
 								$typeArray[]["a"] = $newArray;
+							} else if ($elementName = "ext-link") {
+								$newArray = array();
+								foreach ($elementAttrs as $attrKey => $attrValue) {
+									if ($attrKey === "xlink:href") {
+										$newArray["href"] = $attrValue;
+									} else if ($attrKey = "ext-link-type") {
+										$newArray["class"] = "JATSParser__link-" . $attrValue;
+									}
+								}
+								$typeArray[]["a"] = $newArray;
 							}
 						}
 						break;
@@ -97,14 +107,14 @@ class Text {
 						}
 					}
 				}
-				
+
 				array_push($prevElements, $nodeElement);
-				
+
 				if ($key === 0) {
 					$domElement->appendChild($prevElements[0]);
 				} elseif (($key === (count($typeArray) - 1))) {
 					$nodeElement->nodeValue = $jatsText->getContent();
-					
+
 					foreach ($prevElements as $prevKey => $prevElement) {
 						if ($prevKey !== (count($prevElements) -1)) {
 							$prevElement->appendChild(next($prevElements));
@@ -114,7 +124,7 @@ class Text {
 			}
 		}
 	}
-	
+
 	public static function checkPunctuation(string $label) {
 		$label = trim($label);
 		if (preg_match("/\.$|:$/", $label, $matches) === 0) {
