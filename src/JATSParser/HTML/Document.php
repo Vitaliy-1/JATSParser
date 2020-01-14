@@ -1,5 +1,6 @@
 <?php namespace JATSParser\HTML;
 
+use JATSParser\Body\DispQuote;
 use JATSParser\Body\Document as JATSDocument;
 use JATSParser\HTML\Par as  Par;
 use JATSParser\HTML\Listing as Listing;
@@ -100,44 +101,70 @@ class Document extends \DOMDocument {
 	/**
 	 * @param $articleSections array;
 	 */
-	private function extractContent(array $articleSections): void
-	{
+	private function extractContent(array $articleSections, \DOMElement $element = null): void {
+
+		if ($element) {
+			$parentEl = $element;
+		} else {
+			$parentEl = $this;
+		}
+
 		foreach ($articleSections as $articleSection) {
 
 			switch (get_class($articleSection)) {
 				case "JATSParser\Body\Par":
 					$par = new Par();
-					$this->appendChild($par);
+					$parentEl->appendChild($par);
 					$par->setContent($articleSection);
 					break;
 				case "JATSParser\Body\Listing":
 					$listing = new Listing($articleSection->getStyle());
-					$this->appendChild($listing);
+					$parentEl->appendChild($listing);
 					$listing->setContent($articleSection);
 					break;
 				case "JATSParser\Body\Table":
 					$table = new Table();
-					$this->appendChild($table);
+					$parentEl->appendChild($table);
 					$table->setContent($articleSection);
 					break;
 				case "JATSParser\Body\Figure":
 					$figure = new Figure();
-					$this->appendChild($figure);
+					$parentEl->appendChild($figure);
 					$figure->setContent($articleSection);
 					break;
 				case "JATSParser\Body\Media":
 					$media = new Media();
-					$this->appendChild($media);
+					$parentEl->appendChild($media);
 					$media->setContent($articleSection);
 					break;
 				case "JATSParser\Body\Section":
 					if ($articleSection->getTitle()) {
 						$sectionElement = $this->createElement("h" . ($articleSection->getType() + 1), $articleSection->getTitle());
 						$sectionElement->setAttribute("class", "article-section-title");
-						$this->appendChild($sectionElement);
+						$parentEl->appendChild($sectionElement);
 					}
 					$this->extractContent($articleSection->getContent());
 					break;
+				case "JATSParser\Body\DispQuote":
+					$blockQuote = $this->createElement("blockquote");
+					if ($articleSection->getTitle()) {
+						$sectionElement = $this->createElement("h" . ($articleSection->getType() + 1), $articleSection->getTitle());
+						$sectionElement->setAttribute("class", "article-dispquote-title");
+						$blockQuote->appendChild($sectionElement);
+					}
+					$parentEl->appendChild($blockQuote);
+					$this->extractContent($articleSection->getContent(), $blockQuote);
+					if (!empty($quoteAttribTexts = $articleSection->getAttrib())) {
+						$quoteCite = $this->createElement("cite");
+						$blockQuote->appendChild($quoteCite);
+						foreach ($quoteAttribTexts as $quoteAttribText) {
+							Text::extractText($quoteAttribText, $quoteCite);
+						}
+					}
+					break;
+				case "JATSParser\Body\Text":
+					// For elements that extend Section, like disp-quote
+					Text::extractText($articleSection, $parentEl);
 			}
 		}
 	}

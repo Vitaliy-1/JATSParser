@@ -5,9 +5,10 @@ use JATSParser\Body\Text as JATSText;
 
 class Text {
 
-	public static function extractText(JATSText $jatsText, \DOMElement $domElement) : void {
+	public static function extractText(JATSText $jatsText, \DOMNode $domElement) : void {
 		// Get DOMDocument
 		$domDocument = $domElement->ownerDocument;
+		if (!$domDocument) $domDocument = $domElement;
 
 		// Dealing with simple text (without any properties)
 		$nodeTypes = $jatsText->getType();

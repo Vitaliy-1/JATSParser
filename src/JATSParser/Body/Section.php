@@ -25,10 +25,10 @@ class Section extends AbstractElement {
 
 	function __construct(\DOMElement $section) {
 		parent::__construct($section);
-		
+
 		$this->title = $this->extractFromElement($section, "title");
 		$this->id = $this->extractFromElement($section, "./@id");
-		
+
 		$this->extractType($section);
 		$this->ifHasSections($section);
 		$this->extractContent($section);
@@ -55,7 +55,7 @@ class Section extends AbstractElement {
 		return $this->childSectionsTitles;
 	}
 
-	
+
 	private function extractType(\DOMElement $section) {
 		$parentElements = $this->xpath->query("parent::sec", $section);
 		if (!is_null($parentElements)) {
@@ -103,6 +103,16 @@ class Section extends AbstractElement {
 				case "media":
 					$media = new Media($sectionElement);
 					$content[] = $media;
+					break;
+				case "disp-quote":
+					$dispQuote = new DispQuote($sectionElement);
+					$content[] = $dispQuote;
+					break;
+				case "#text":
+					if (trim($sectionElement->nodeValue) != "") {
+						$text = new Text($sectionElement);
+						$content[] = $text;
+					}
 					break;
 			}
 		}
