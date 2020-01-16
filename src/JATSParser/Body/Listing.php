@@ -11,12 +11,12 @@ class Listing extends AbstractElement {
 	 * type of a list: 1, 2, 3, 4 -> list, sublist, subsublist, etc.
 	 * default is 1
 	 */
-	public $type;
+	private $type;
 
 	/* @var string: "unordered", "ordered" */
-	public $style;
+	private $style;
 
-	public $content;
+	private $content;
 
 	public function __construct(\DOMElement $list) {
 		$xpath = Document::getXpath();

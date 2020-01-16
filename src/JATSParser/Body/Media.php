@@ -3,40 +3,40 @@
 use JATSParser\Body\Document as Document;
 
 class Media extends AbstractElement {
-	
+
 	/* @var $label string */
 	private $label;
-	
+
 	/* @var $link string */
 	private $link;
-	
+
 	/* @var $id string */
 	private $id;
-	
+
 	/* @var $content array; video caption */
 	private $content;
-	
+
 	/* @var $title array */
 	private $title;
-	
+
 	public function __construct(\DOMElement $mediaElement) {
 		parent::__construct($mediaElement);
-		
-		$this->label = $this->extractFromElement($mediaElement, ".//label");
-		$this->link = $this->extractFromElement($mediaElement, "./@xlink:href");
-		$this->id = $this->extractFromElement($mediaElement, "./@id");
+
+		$this->label = $this->extractFromElement(".//label", $mediaElement);
+		$this->link = $this->extractFromElement("./@xlink:href", $mediaElement);
+		$this->id = $this->extractFromElement("./@id", $mediaElement);
 		$this->title = $this->extractTitleOrCaption($mediaElement, self::JATS_EXTRACT_TITLE);
 		$this->content = $this->extractTitleOrCaption($mediaElement, self::JATS_EXTRACT_CAPTION);
-		
+
 	}
-	
+
 	/**
 	 * @return array
 	 */
 	public function getContent(): array {
 		return $this->content;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -44,7 +44,7 @@ class Media extends AbstractElement {
 	{
 		return $this->label;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -52,7 +52,7 @@ class Media extends AbstractElement {
 	{
 		return $this->link;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -60,7 +60,7 @@ class Media extends AbstractElement {
 	{
 		return $this->id;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -68,5 +68,5 @@ class Media extends AbstractElement {
 	{
 		return $this->title;
 	}
-	
+
 }

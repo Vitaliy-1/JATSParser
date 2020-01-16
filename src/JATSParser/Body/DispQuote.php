@@ -13,7 +13,7 @@ class DispQuote extends Section {
 	function __construct (\DOMElement $element) {
 		parent::__construct($element);
 
-		$this->attrib = $this->extractFormattedText($element, ".//attrib");
+		$this->attrib = $this->extractFormattedText(".//attrib", $element);
 	}
 
 	// Cannot contain sections

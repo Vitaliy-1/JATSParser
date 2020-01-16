@@ -22,9 +22,9 @@ class Figure extends AbstractElement {
 	public function __construct(\DOMElement $figureElement) {
 		parent::__construct($figureElement);
 
-		$this->label = $this->extractFromElement($figureElement, ".//label");
-		$this->link = $this->extractFromElement($figureElement, ".//graphic/@xlink:href");
-		$this->id = $this->extractFromElement($figureElement, "./@id");
+		$this->label = $this->extractFromElement(".//label", $figureElement);
+		$this->link = $this->extractFromElement(".//graphic/@xlink:href", $figureElement);
+		$this->id = $this->extractFromElement( "./@id", $figureElement);
 		$this->title = $this->extractTitleOrCaption($figureElement, self::JATS_EXTRACT_TITLE);
 		$this->content = $this->extractTitleOrCaption($figureElement, self::JATS_EXTRACT_CAPTION);
 

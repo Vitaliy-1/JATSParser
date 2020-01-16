@@ -13,7 +13,7 @@ abstract class AbstractElement implements JATSElement {
 		$this->xpath = Document::getXpath();
 	}
 
-	protected function extractFromElement(\DOMElement $domElement = null, string $xpathExpression): ?string {
+	protected function extractFromElement(string $xpathExpression, \DOMElement $domElement = null): ?string {
 
 		$nodeTextValue = null;
 		$domElement !== null ? $searchNodes = $this->xpath->evaluate($xpathExpression, $domElement): $searchNodes = $this->xpath->evaluate($xpathExpression);
@@ -26,7 +26,7 @@ abstract class AbstractElement implements JATSElement {
 		return $nodeTextValue;
 	}
 
-	protected function extractFromElements(\DOMElement $domElement = null, string $xpathExpression): ?array {
+	protected function extractFromElements(string $xpathExpression, \DOMElement $domElement = null): ?array {
 
 		$nodeTextValues = array();
 		$domElement !== null ? $searchNodes = $this->xpath->evaluate($xpathExpression, $domElement): $searchNodes = $this->xpath->evaluate($xpathExpression);
@@ -39,7 +39,7 @@ abstract class AbstractElement implements JATSElement {
 		return $nodeTextValues;
 	}
 
-	protected function extractFormattedText(\DOMElement $domElement = null, string $xpathExpression): array {
+	protected function extractFormattedText(string $xpathExpression, \DOMElement $domElement = null): array {
 		$nodeTextValues = array();
 		$xpathExpression .= "//text()";
 		$domElement !== null ? $searchNodes = $this->xpath->evaluate($xpathExpression, $domElement): $searchNodes = $this->xpath->evaluate($xpathExpression);
