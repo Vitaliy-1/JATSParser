@@ -162,9 +162,15 @@ class Document extends \DOMDocument {
 						}
 					}
 					break;
+				case "JATSParser\Body\Verse":
+					$verseGroup = new Verse();
+					$parentEl->appendChild($verseGroup);
+					$verseGroup->setContent($articleSection);
+					break;
 				case "JATSParser\Body\Text":
 					// For elements that extend Section, like disp-quote
 					Text::extractText($articleSection, $parentEl);
+					break;
 			}
 		}
 	}

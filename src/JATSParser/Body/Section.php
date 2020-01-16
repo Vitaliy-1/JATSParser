@@ -114,6 +114,10 @@ class Section extends AbstractElement {
 						$content[] = $text;
 					}
 					break;
+				case "verse-group":
+					$versa = new Verse($sectionElement);
+					$content[] = $versa;
+					break;
 			}
 		}
 		$this->content = $content;
