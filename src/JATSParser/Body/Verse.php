@@ -5,7 +5,7 @@ use JATSParser\Body\Text as Text;
 
 class Verse extends AbstractElement {
 
-	private $content;
+	private $content = array();
 	private $attrib;
 
 	public function __construct(\DOMElement $element) {

@@ -10,11 +10,13 @@ class Verse extends \DOMElement {
 	}
 
 	public function setContent(JATSVerse $jatsVerse) {
-		foreach ($jatsVerse->getContent() as $item) {
-			foreach ($item as $text) {
-				HTMLText::extractText($text, $this);
+		if (!empty($jatsVerse->getContent())) {
+			foreach ($jatsVerse->getContent() as $item) {
+				foreach ($item as $text) {
+					HTMLText::extractText($text, $this);
+				}
+				$this->appendChild($this->ownerDocument->createElement("br"));
 			}
-			$this->appendChild($this->ownerDocument->createElement("br"));
 		}
 
 		if (!empty($attribTexts = $jatsVerse->getAttrib())) {
