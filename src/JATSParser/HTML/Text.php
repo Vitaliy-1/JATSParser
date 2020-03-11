@@ -74,12 +74,12 @@ class Text {
 			foreach ($typeArray as $typeKey => $type) {
 				if (!is_array($type)) {
 					$nodeElement = $domDocument->createElement($type);
-					$nodeElement->nodeValue = $jatsText->getContent();
+					$nodeElement->nodeValue = htmlspecialchars($jatsText->getContent());
 					$domElement->appendChild($nodeElement);
 				} else {
 					foreach ($type as $insideKey => $insideType) {
 						$nodeElement = $domDocument->createElement($insideKey);
-						$nodeElement->nodeValue = trim($jatsText->getContent());
+						$nodeElement->nodeValue = trim(htmlspecialchars($jatsText->getContent()));
 						if (is_array($insideType)) {
 							foreach ($insideType as $nodeAttrKey => $nodeAttrValue) {
 								$nodeElement->setAttribute($nodeAttrKey, $nodeAttrValue);
@@ -114,7 +114,7 @@ class Text {
 				if ($key === 0) {
 					$domElement->appendChild($prevElements[0]);
 				} elseif (($key === (count($typeArray) - 1))) {
-					$nodeElement->nodeValue = $jatsText->getContent();
+					$nodeElement->nodeValue = htmlspecialchars($jatsText->getContent());
 
 					foreach ($prevElements as $prevKey => $prevElement) {
 						if ($prevKey !== (count($prevElements) -1)) {
