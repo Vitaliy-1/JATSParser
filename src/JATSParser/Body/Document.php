@@ -5,6 +5,7 @@ use JATSParser\Back\Journal as Journal;
 use JATSParser\Back\Book as Book;
 use JATSParser\Back\Chapter as Chapter;
 use JATSParser\Back\Conference as Conference;
+use JATSParser\Back\Other as Other;
 
 class Document {
 
@@ -77,6 +78,10 @@ class Document {
 							break;
 						case "conference":
 							$conference = new Conference($reference);
+							$references[] = $conference;
+							break;
+						case "other":
+							$conference = new Other($reference);
 							$references[] = $conference;
 							break;
 						default:
