@@ -6,6 +6,7 @@ use JATSParser\Back\Book as Book;
 use JATSParser\Back\Chapter as Chapter;
 use JATSParser\Back\Conference as Conference;
 use JATSParser\Back\Other as Other;
+use \JATSParser\Front\JournalMeta as JournalMeta;
 
 class Document {
 
@@ -23,13 +24,17 @@ class Document {
 
 	/* var $references array of article's References */
 	private $references = array();
+        
+	/* var $metadata array */
+	private $metadata = array();
+        
 
-
-	function __construct(?string $documentPath) {
+	public function __construct(?string $documentPath) {
 		$document = new \DOMDocument;
 		$this->document = $document->load($documentPath);
 		self::$xpath = new \DOMXPath($document);
 
+                $this->extractMetadata();
 		$this->extractContent();
 		$this->extractReferences();
 	}
@@ -49,11 +54,64 @@ class Document {
 	public function getReferences() : array {
 		return $this->references;
 	}
+	
+        public function getMetadata() : array {
+		return $this->metadata;
+	}
+        
+        private function extractMetadata() {
+            
+            $metadata = array();
+            foreach(self::$xpath->evaluate("/article/front") as $meta ) {
+                
+                /* @var $journalmeta \DOMElement */
+		$journalMetaNodes = self::$xpath->query(".//journal-meta[1]", $meta);
+		if ($journalMetaNodes->length > 0) {
+                    foreach ($journalMetaNodes as $journalMetaNode) {
+                        
+                        /* @var $journalMetaNode \DOMAttr */
+                        $data = new JournalMeta($journalMetaNode);
+                        $metadata[] = $data;
+                        
+                    }
+                    
+                }
+                
+                /* @var $journalmeta \DOMElement */
+		$articleMeta = self::$xpath->query(".//article-meta[1]", $meta);
+		if ($articleMeta->length > 0) {
+                    foreach ($articleMeta as $articleMetaNode) {
+                        
+                        /* @var $articleMetaNode \DOMAttr */
+                        switch($articleMetaNode->nodeValue) {
+                            
+                            case "article-id":
+                                $journal = new Journal($reference);
+                                $references[] = $journal;
+                                break;
+                            
+                            case "article-categories":
+                                $journal = new Journal($reference);
+                                $references[] = $journal;
+                                break;
+                            
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+            $this->metadata = $metadata;
+            
+        }
 
 	/* @brief Constructor for references
 	 * JATS XML can give us a little, if not at all, information about reference type;
 	 * Here we are trying to determine the type of citation by element-citation node attribute or names of nodes which reference contains;
-	 * Supported types are: journal, book, chapter, and conference.
+	 * Supported types are: journal, book, chapter, and conference (+other).
 	 */
 	private function extractReferences() {
 		$references = array();
