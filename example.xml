@@ -113,7 +113,16 @@
    <body>
       <sec>
          <title>Introduction </title>
-         <p>Vascular and cerebrovascular diseases remain an actual problem of modern society. This is explained by their significant prevalence, as well as high mortality rates. According to the Ministry of Health, 100-120 thousand strokes are registered annually in Ukraine, of which one third is among the working age population. In 2015, the incidence of acute impairment of cerebral circulation was 274.1 per 100 thousand population (the average rate of morbidity in Europe - 200 cases per 100 thousand population) <xref ref-type="bibr" rid="bib1">1</xref>, <xref ref-type="bibr" rid="bib2">2</xref>. The American Association of Cardiologists reported that 795,000 acute impairments of cerebral circulation are recorded in the United States in 2017 year, that is, a new stroke occurs almost every 40 seconds <xref ref-type="bibr" rid="bib3">3</xref>.</p>
+         <p>Vascular and cerebrovascular diseases remain an actual problem of modern society. This is explained by their significant prevalence, as well as high mortality rates.
+	         <fig id="fig3">
+		         <object-id pub-id-type="doi"/>
+		         <label>Figure 0.5</label>
+		         <caption>
+			         <title>This is figure inside paragraph</title>
+		         </caption>
+		         <graphic xlink:href="fig1.jpg"/>
+	         </fig>
+	         According to the Ministry of Health, 100-120 thousand strokes are registered annually in Ukraine, of which one third is among the working age population. In 2015, the incidence of acute impairment of cerebral circulation was 274.1 per 100 thousand population (the average rate of morbidity in Europe - 200 cases per 100 thousand population) <xref ref-type="bibr" rid="bib1">1</xref>, <xref ref-type="bibr" rid="bib2">2</xref>. The American Association of Cardiologists reported that 795,000 acute impairments of cerebral circulation are recorded in the United States in 2017 year, that is, a new stroke occurs almost every 40 seconds <xref ref-type="bibr" rid="bib3">3</xref>.</p>
          <p>According to Harrison R.A., more than 70% of patients with a stroke feel pain every day. Pain genesis is quite varied: pain in the shoulder joint, pain in the paretic limbs due to distinct spasticity, central or thalamic pain, myofascial and vertebral pain, headache, etc. <xref ref-type="bibr" rid="bib4">4</xref>.</p>
          <p>According to the literature, headache in the acute phase of stroke occurs in 27-31% of patients, in the remote period - much less (3.5-11.0%). Overall, about 11% of patients had reported a permanent or a periodic headache that occurred 3 months before a stroke. A headache, directly related to a stroke, is noted by more than 30% of patients <xref ref-type="bibr" rid="bib4">4</xref>,<xref ref-type="bibr" rid="bib5">5</xref>,<xref ref-type="bibr" rid="bib6">6</xref>.</p>
          <p>It is believed that if a headache was preceded by a stroke, the probability of its appearance as a symptom after the onset of acute impairment of cerebral circulation is 20% <xref ref-type="bibr" rid="bib4">4</xref>,<xref ref-type="bibr" rid="bib6">6</xref>. It was investigated that significantly more headaches were observed in patients with atherothrombotic and cardioembolic stroke. Association between a headache in stroke and hemorrhagic stroke was not detected <xref ref-type="bibr" rid="bib5">5</xref>.</p>
@@ -140,7 +149,7 @@
 			   </caption>
 			   <graphic xlink:href="fig1.jpg"/>
 			</fig>
-            
+
             <p>Regarding the distribution of patients by the period of the stroke (<xref ref-type="fig" rid="fig2">Fig. 2</xref>), the largest number of participants were recruited at the residual stroke period. Only small amount of patients had early stroke stage at the baseline.</p>
 			<fig id="fig2">
 			   <object-id pub-id-type="doi"/>
@@ -152,7 +161,7 @@
 			</fig>
          </sec>
 		 <sec>
-            <title>Headache evaluation</title> 
+            <title>Headache evaluation</title>
 			<p>A headache among the main complaints was observed in 70% of patients in the main group and 84% of patients in the control group. The headache evaluation was based on 4 criteria:</p>
             <list list-type="ordered">
                <list-item>
@@ -198,7 +207,7 @@
                   <th colspan="1" rowspan="1"> After treatment</th>
                </tr>
 			</thead>
-            <tbody>			
+            <tbody>
                <tr>
                   <td colspan="1" rowspan="1">A</td>
                   <td colspan="1" rowspan="1">3.733333</td>
@@ -239,7 +248,7 @@
                   <td colspan="1" rowspan="1">1.865191</td>
                   <td colspan="1" rowspan="1">0.07</td>
                </tr>
-			 </tbody>  
+			 </tbody>
             </table>
          </table-wrap>
          <p>Analysis of the results of treatment of patients in the main group showed that complex therapy with the use of acupuncture allowed to obtain a positive effect on the three characteristics: the intensity, duration, and nature of pain. In addition, there was a tendency to affect D crtiterion (localization, p = 0.07), which is logical, since the reflexological approach itself, besides the general, suggests a specific topical effect on the zone of pain manifestation. The indicator did not reach the level of significance but equals 0.07, which means a "tendency" for change (p &lt;0.1). It can be speculated that the bigger sample and follow-up period will give enough statistical power to make the difference significant.</p>
@@ -307,7 +316,7 @@
                   <td colspan="1" rowspan="1">0.957895</td>
                   <td colspan="1" rowspan="1">&gt; 0.05</td>
                </tr>
-			</tbody>   
+			</tbody>
             </table>
          </table-wrap>
          <p>So, as can be seen from the statistical calculations presented in <xref ref-type="table" rid="tbl2">Table 2</xref>, it has been proved that traditional drug therapy significantly reduces a headache in poststroke patients (p &lt;0.05) only in two indicators - intensity and duration. However, the effect of treatment on the nature and localization of a headache was not significant.</p>
@@ -332,7 +341,7 @@
                   <th colspan="1" rowspan="1">m2</th>
                   <th colspan="1" rowspan="1">Std Dev</th>
                </tr>
-		    </thead>  
+		    </thead>
 			<tbody>
                <tr>
                   <td colspan="1" rowspan="1">A</td>
@@ -370,7 +379,7 @@
                   <td colspan="1" rowspan="1">2.77949</td>
                   <td colspan="1" rowspan="1">&lt; 0.05</td>
                </tr>
-			</tbody>   
+			</tbody>
             </table>
          </table-wrap>
          <p>Thus, as shown in <xref ref-type="table" rid="tbl3">Table 3</xref>, the effectiveness of acupuncture in the complex treatment of a headache in patients after a stroke is significant in compare to medications alone. In addition, we have received interesting results that refer to the age and sexual aspects of the patients being studied. Consequently, in a correlation analysis of age and gender, it was found that a headache was more intense in female subjects (R = 0.34); there was a reverse correlation between the severity of pain and age of patients (R = 0.39), which is consistent with the findings of other researchers <xref ref-type="bibr" rid="bib4">4</xref>,<xref ref-type="bibr" rid="bib6">6</xref>. The complaints on a headache were less pronounced in more older age group and vice versa, the younger age was associated with more pronounced headache intensity, which may be explained by the exhaustion of the nociceptive system as a result of both acute and chronic cerebral ischemia in older people <xref ref-type="bibr" rid="bib4">4</xref>,<xref ref-type="bibr" rid="bib19">19</xref>.</p>
