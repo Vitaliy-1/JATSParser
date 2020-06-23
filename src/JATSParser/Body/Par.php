@@ -42,7 +42,7 @@ class Par implements JATSElement {
 	{
 		$expression = "";
 		$blockNodesMappedArray = AbstractElement::mappedBlockElements();
-		$lastKey = array_key_last($blockNodesMappedArray );
+		$lastKey = array_key_last($blockNodesMappedArray);
 		foreach ($blockNodesMappedArray  as $key => $nodeString) {
 			$expression .= ".//" . $nodeString;
 			if ($key !== $lastKey) {
