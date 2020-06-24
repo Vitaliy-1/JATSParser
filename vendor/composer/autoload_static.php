@@ -6,7 +6,21 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit091355fbb6e009670e76e1a30f9d6758
 {
+    public static $files = array (
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Seboettg\\Collection\\' => 20,
+            'Seboettg\\CiteProc\\' => 18,
+        ),
+        'M' => 
+        array (
+            'MyCLabs\\Enum\\' => 13,
+        ),
         'J' => 
         array (
             'JATSParser\\' => 11,
@@ -14,6 +28,22 @@ class ComposerStaticInit091355fbb6e009670e76e1a30f9d6758
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Seboettg\\Collection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/seboettg/collection/src/Seboettg/Collection',
+        ),
+        'Seboettg\\CiteProc\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/seboettg/citeproc-php/src',
+        ),
+        'MyCLabs\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
+        ),
         'JATSParser\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/JATSParser',
