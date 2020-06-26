@@ -13,9 +13,11 @@ $jatsDocument = new JATSDocument("example.xml");
 
 /*
  * @var $htmlDocument HTMLDocument conversion to HTML
- * the last parameter is citation style format: https://github.com/citation-style-language/styles
  */
-$htmlDocument = new HTMLDocument($jatsDocument, true, 'vancouver');
+$htmlDocument = new HTMLDocument($jatsDocument);
+
+//the first parameter is citation style format: https://github.com/citation-style-language/styles
+$htmlDocument->setReferences('apa', 'en-US', true);
 
 $htmlDocument->saveAsValidHTMLFile('example.html', 'Arbitrary HTML document title', true);
 

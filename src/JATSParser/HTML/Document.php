@@ -8,6 +8,7 @@ use Seboettg\CiteProc\StyleSheet;
 use Seboettg\CiteProc\CiteProc;
 
 define('JATSPARSER_CITEPROC_STYLE_DEFAULT', 'vancouver');
+define('JATSPARSER_CITEPROC_LANG_DEFAULT', 'en-US');
 
 class Document extends \DOMDocument {
 
@@ -15,17 +16,32 @@ class Document extends \DOMDocument {
 	var $citationStyle;
 
 	var $citeProcReferences;
+	var $styleInTextLinks;
+	var $citationLang;
+	var $jatsDocument;
 
-	public function __construct(JATSDocument $jatsDocument, $parseReferences = true, $citationStyle = JATSPARSER_CITEPROC_STYLE_DEFAULT) {
+	public function __construct(JATSDocument $jatsDocument) {
 		parent::__construct('1.0', 'utf-8');
 		$this->preserveWhiteSpace = false;
 		$this->formatOutput = true;
-		$this->citationStyle = $citationStyle;
+		$this->jatsDocument = $jatsDocument;
 
-		$articleSections = $jatsDocument->getArticleSections();
+		$articleSections = $this->jatsDocument->getArticleSections();
 		$this->extractContent($articleSections);
+	}
 
-		if ($jatsDocument->getReferences() && $parseReferences) $this->extractReferences($jatsDocument->getReferences());
+	/**
+	 * @param string $citationStyle see: https://github.com/citation-style-language/styles
+	 * @param string $lang language for citation styling
+	 * @param bool $styleInTextLinks whether to style in-text links to references
+	 */
+	public function setReferences(string $citationStyle = JATSPARSER_CITEPROC_STYLE_DEFAULT, string $lang = JATSPARSER_CITEPROC_LANG_DEFAULT, bool $styleInTextLinks = false): void {
+		$this->citationStyle = $citationStyle;
+		$this->citationLang = $lang;
+		$this->styleInTextLinks = $styleInTextLinks;
+		if (!empty($this->jatsDocument->getReferences())) {
+			$this->extractReferences($this->jatsDocument->getReferences());
+		}
 	}
 
 	public function getHmtlForGalley() {
@@ -213,8 +229,12 @@ class Document extends \DOMDocument {
 			]
 		];
 
-		$citeProc = new CiteProc($style, 'en-US', $additionalMarkup);
+		$citeProc = new CiteProc($style, $this->citationLang, $additionalMarkup);
 		$htmlString = $citeProc->render($data, 'bibliography');
+
+		if ($this->styleInTextLinks) {
+			$this->setInTextLinks($citeProc, $data);
+		}
 
 		$this->getCiteBody($htmlString);
 	}
@@ -247,6 +267,20 @@ class Document extends \DOMDocument {
 						$newListItemEl->appendChild($newNode);
 					}
 				}
+			}
+		}
+	}
+
+	protected function setInTextLinks($citeProc, $data) {
+
+		$xpath = new \DOMXPath($this);
+		$links = $xpath->query('//a[@class="bibr"]');
+		foreach ($links as $link) {
+			$linkId = $link->getAttribute('href');
+			if ($linkId) {
+				$citeObject = new \stdClass();
+				$citeObject->id = str_replace("#", "", $linkId);
+				$link->nodeValue = $citeProc->render($data, "citation", [$citeObject]);
 			}
 		}
 	}
