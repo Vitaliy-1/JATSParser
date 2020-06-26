@@ -4,13 +4,23 @@ use JATSParser\Body\DispQuote;
 use JATSParser\Body\Document as JATSDocument;
 use JATSParser\HTML\Par as  Par;
 use JATSParser\HTML\Listing as Listing;
+use Seboettg\CiteProc\StyleSheet;
+use Seboettg\CiteProc\CiteProc;
+
+define('JATSPARSER_CITEPROC_STYLE_DEFAULT', 'vancouver');
 
 class Document extends \DOMDocument {
 
-	public function __construct(JATSDocument $jatsDocument, $parseReferences = true) {
+	/** @var $citationStyle string  */
+	var $citationStyle;
+
+	var $citeProcReferences;
+
+	public function __construct(JATSDocument $jatsDocument, $parseReferences = true, $citationStyle = JATSPARSER_CITEPROC_STYLE_DEFAULT) {
 		parent::__construct('1.0', 'utf-8');
 		$this->preserveWhiteSpace = false;
 		$this->formatOutput = true;
+		$this->citationStyle = $citationStyle;
 
 		$articleSections = $jatsDocument->getArticleSections();
 		$this->extractContent($articleSections);
@@ -101,7 +111,7 @@ class Document extends \DOMDocument {
 	/**
 	 * @param $articleSections array;
 	 */
-	private function extractContent(array $articleSections, \DOMElement $element = null): void {
+	protected function extractContent(array $articleSections, \DOMElement $element = null): void {
 
 		if ($element) {
 			$parentEl = $element;
@@ -175,7 +185,7 @@ class Document extends \DOMDocument {
 		}
 	}
 
-	private function extractReferences (array $references): void {
+	protected function extractReferences (array $references): void {
 
 		$referencesHeading = $this->createElement("h2");
 		$referencesHeading->setAttribute("class", "article-section-title");
@@ -183,14 +193,108 @@ class Document extends \DOMDocument {
 		$referencesHeading->nodeValue = "References";
 		$this->appendChild($referencesHeading);
 
-		$referenceList = $this->createElement("ol");
-		$referenceList->setAttribute("class", "references");
-		$this->appendChild($referenceList);
-
+		$data = [];
 		foreach ($references as $reference) {
-			$htmlReference = new Reference();
-			$referenceList->appendChild($htmlReference);
-			$htmlReference->setContent($reference);
+			$citeProcRef = new Reference($reference);
+			$data[] = $citeProcRef->getContent();
 		}
+
+		$this->citeProcReferences = $data;
+
+		$style = StyleSheet::loadStyleSheet($this->getCitationStyle());
+
+		$wrapIntoListItem = function($cslItem, $renderedText) {
+			return '<li id="' . $cslItem->id .'">' . $renderedText . '</li>';
+		};
+
+		$additionalMarkup = [
+			'bibliography' => [
+				'csl-entry' => $wrapIntoListItem
+			]
+		];
+
+		$citeProc = new CiteProc($style, 'en-US', $additionalMarkup);
+		$htmlString = $citeProc->render($data, 'bibliography');
+
+		$this->getCiteBody($htmlString);
+	}
+
+	protected function getCiteBody(string $htmlString) {
+		$document = new \DOMDocument('1.0', 'utf-8');
+		$document->loadXML($htmlString);
+
+		$listEl = $this->createElement('ol');
+		$listEl->setAttribute('class', 'references');
+		$this->appendChild($listEl);
+
+		$xpath = new \DOMXPath($document);
+		$listItemEls = $xpath->query('//li');
+		foreach ($listItemEls as $listItemEl) {
+			$newListItemEl = $this->createElement('li');
+			$newListItemEl->setAttribute('id', $listItemEl->getAttribute('id'));
+			$listEl->appendChild($newListItemEl);
+
+			$nodeList = $xpath->query('div[@class="csl-right-inline"]/node()', $listItemEl);
+			if ($nodeList->count() > 0) {
+				foreach ($nodeList as $node) {
+					$newNode = $this->importNode($node, true);
+					$newListItemEl->appendChild($newNode);
+				}
+			} else {
+				$nodeList = $xpath->query('node()', $listItemEl); {
+					foreach ($nodeList as $node) {
+						$newNode = $this->importNode($node, true);
+						$newListItemEl->appendChild($newNode);
+					}
+				}
+			}
+		}
+	}
+
+	public function getCitationStyle(): string {
+		return $this->citationStyle;
+	}
+
+	public function saveAsValidHTML(string $documentTitle, bool $prettyPrint = false): string {
+		if ($prettyPrint) {
+			$xpath = new \DOMXPath($this);
+			$nodes = $xpath->query('//text()');
+			foreach ($nodes as $node) {
+				$node->nodeValue = preg_replace("/[\\s]{2,}/", " ", $node->nodeValue);
+			}
+		}
+
+		$htmlString = $this->saveXML($this);
+
+		$xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>';
+		$pos = strpos($htmlString, $xmlDeclaration);
+		if ($pos !== false) {
+			$htmlString = substr_replace($htmlString, '', $pos, strlen($xmlDeclaration));
+		}
+
+		$htmlString =
+			'<!doctype html>' . "\n" .
+			'<html lang="">' . "\n" .
+			'<head>' . "\n" .
+			"\t" . '<meta charset="UTF-8">' . "\n" .
+			"\t" . '<title>' . htmlspecialchars($documentTitle) . '</title>' . "\n" .
+			'</head>' . "\n" .
+			'<body>' . "\n" .
+			$htmlString .
+			'</body>'. "\n" .
+			'</html>';
+
+		return $htmlString;
+
+	}
+
+	/**
+	 * @param string $filename path to the file to write a file
+	 * @param string $documentTitle document title that is required for HTML to be valid
+	 * @param bool $prettyPrint
+	 * @return void
+	 */
+	public function saveAsValidHTMLFile(string $filename, string $documentTitle, bool $prettyPrint = true): void {
+		file_put_contents($filename, $this->saveAsValidHTML($documentTitle, $prettyPrint));
 	}
 }
