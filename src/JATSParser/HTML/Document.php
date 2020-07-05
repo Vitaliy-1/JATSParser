@@ -298,13 +298,7 @@ class Document extends \DOMDocument {
 			}
 		}
 
-		$htmlString = $this->saveXML($this);
-
-		$xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>';
-		$pos = strpos($htmlString, $xmlDeclaration);
-		if ($pos !== false) {
-			$htmlString = substr_replace($htmlString, '', $pos, strlen($xmlDeclaration));
-		}
+		$htmlString = $this->saveAsHTML();
 
 		$htmlString =
 			'<!doctype html>' . "\n" .
@@ -320,6 +314,18 @@ class Document extends \DOMDocument {
 
 		return $htmlString;
 
+	}
+
+	public function saveAsHTML() {
+		$htmlString = $this->saveXML($this);
+
+		$xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>';
+		$pos = strpos($htmlString, $xmlDeclaration);
+		if ($pos !== false) {
+			$htmlString = substr_replace($htmlString, '', $pos, strlen($xmlDeclaration));
+		}
+
+		return $htmlString;
 	}
 
 	/**
