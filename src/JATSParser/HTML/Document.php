@@ -245,6 +245,7 @@ class Document extends \DOMDocument {
 
 		$listEl = $this->createElement('ol');
 		$listEl->setAttribute('class', 'references');
+		$listEl->setAttribute('id', 'referenceList');
 		$this->appendChild($listEl);
 
 		$xpath = new \DOMXPath($document);
