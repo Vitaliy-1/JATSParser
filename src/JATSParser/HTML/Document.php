@@ -9,6 +9,7 @@ use Seboettg\CiteProc\CiteProc;
 
 define('JATSPARSER_CITEPROC_STYLE_DEFAULT', 'vancouver');
 define('JATSPARSER_CITEPROC_LANG_DEFAULT', 'en-US');
+define('JATSPARSER_REFERENCE_ELEMENT_ID', 'referenceList'); // Document::getRawReferences() linked to this id
 
 class Document extends \DOMDocument {
 
@@ -245,7 +246,7 @@ class Document extends \DOMDocument {
 
 		$listEl = $this->createElement('ol');
 		$listEl->setAttribute('class', 'references');
-		$listEl->setAttribute('id', 'referenceList');
+		$listEl->setAttribute('id', JATSPARSER_REFERENCE_ELEMENT_ID);
 		$this->appendChild($listEl);
 
 		$xpath = new \DOMXPath($document);
@@ -317,8 +318,9 @@ class Document extends \DOMDocument {
 
 	}
 
-	public function saveAsHTML() {
-		$htmlString = $this->saveXML($this);
+	public function saveAsHTML($element = null) {
+
+		$htmlString = $element ? $this->saveXML($element) : $this->saveXML($this);
 
 		$xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>';
 		$pos = strpos($htmlString, $xmlDeclaration);
@@ -337,5 +339,38 @@ class Document extends \DOMDocument {
 	 */
 	public function saveAsValidHTMLFile(string $filename, string $documentTitle, bool $prettyPrint = true): void {
 		file_put_contents($filename, $this->saveAsValidHTML($documentTitle, $prettyPrint));
+	}
+
+	/**
+	 * @return array of references, where key is unique id, ordered according to appearance in JATS XML
+	 */
+	public function getRawReferences(): array {
+		$references = [];
+
+		$refListEl = null;
+
+		// DOMDocument::getElementById or xpath analog won't work presumably because the absence of a root element
+		foreach ($this->getElementsByTagName('ol') as $ol) {
+			if ($ol->getAttribute('id') == JATSPARSER_REFERENCE_ELEMENT_ID) {
+				$refListEl = $ol;
+			}
+		}
+
+		if (!$refListEl) return $references;
+
+		foreach ($refListEl->childNodes as $refItemEl) {
+			$htmlString = '';
+			foreach ($refItemEl->childNodes as $refContent) {
+				$htmlString .= $this->saveAsHTML($refContent);
+			}
+
+			if ($refItemEl->hasAttribute('id')) {
+				$references[$refItemEl->getAttribute('id')] = $htmlString;
+			} else {
+				$references[] = $htmlString;
+			}
+		}
+
+		return $references;
 	}
 }
