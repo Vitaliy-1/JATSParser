@@ -65,7 +65,9 @@ class Reference {
 		$this->setSimpleProperty('title', 'getTitle');
 
 		// specific properties
-		$this->setDate('issued', 'getYear');
+		if (checkdate(1, 1, (int) $this->jatsReference->getYear())) {
+			$this->setDate('issued', 'getYear');
+		}
 		$this->setSimpleProperty('container-title', 'getJournal');
 		$this->setSimpleProperty('journal', 'getJournal');
 		$this->setSimpleProperty('volume', 'getVolume');
