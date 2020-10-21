@@ -8,6 +8,12 @@ JATSParser is aimed to be integrated with Open Journal Systems 3.0+ for transfor
 * Has dependency from citeproc-php for support for different citation style formats 
 
 ### Cli usage
+Clone the project and enter it:
+```
+git clone https://github.com/Vitaliy-1/JATSParser.git
+cd JATSParser
+```
+Usage (requires php-cli 7.3 or higher):
 ```
 php jatsparser.php examples/example.xml examples/example.html vancouver
 ```
