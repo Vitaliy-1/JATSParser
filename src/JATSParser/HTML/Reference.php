@@ -23,7 +23,6 @@ class Reference {
 	public function setContent() {
 		if (!isset($this->content)) $this->content = new \stdClass();
 
-
 		$this->setSimpleProperty('id', 'getId');
 
 		if (!empty($this->jatsReference->getAuthors())) {
@@ -114,8 +113,6 @@ class Reference {
 				$this->content->type = 'conference';
 
 				break;
-
-
 		}
 	}
 
@@ -144,5 +141,22 @@ class Reference {
 			$date->{'date-parts'}[][] = $this->jatsReference->$method();
 			$this->content->{$property} = $date;
 		}
+	}
+
+	/**
+	 * @return bool
+	 * @brief checks if generated CJSON-CSL doesn't contain ref specific info, e.g., title, authors, year.
+	 * TODO find a better way of CSL validation
+	 */
+	public function refIsEmpty(): bool {
+		$csl = (array) $this->content;
+		// ID and type are assigned irrespectively to the reference content
+		unset($csl['id']);
+		unset($csl['type']);
+		return empty($csl);
+	}
+
+	public function getJatsReference(): AbstractReference {
+		return $this->jatsReference;
 	}
 }

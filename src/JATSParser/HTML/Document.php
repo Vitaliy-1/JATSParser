@@ -211,9 +211,16 @@ class Document extends \DOMDocument {
 		$this->appendChild($referencesHeading);
 
 		$data = [];
+		$rawData = [];
 		foreach ($references as $reference) {
 			$citeProcRef = new Reference($reference);
-			$data[] = $citeProcRef->getContent();
+			if (!$citeProcRef->refIsEmpty()) {
+				$data[] = $citeProcRef->getContent();
+			} elseif ($citeProcRef->getJatsReference()->isMixed() && !empty(trim($citeProcRef->getJatsReference()->getRawReference()))) {
+				$rawData[] =$citeProcRef->getJatsReference();
+			} else {
+				error_log("WARNING: reference with id " . $reference->getId() . " is invalid and cannot be parsed");
+			}
 		}
 
 		$this->citeProcReferences = $data;
@@ -237,10 +244,10 @@ class Document extends \DOMDocument {
 			$this->setInTextLinks($citeProc, $data);
 		}
 
-		$this->getCiteBody($htmlString);
+		$this->getCiteBody($htmlString, $rawData);
 	}
 
-	protected function getCiteBody(string $htmlString) {
+	protected function getCiteBody(string $htmlString, array $rawData) {
 		$document = new \DOMDocument('1.0', 'utf-8');
 		$document->loadXML($htmlString);
 
@@ -270,6 +277,14 @@ class Document extends \DOMDocument {
 					}
 				}
 			}
+		}
+		// Append data from mixed citation nodes that don't contain valid ref data for CSL
+		foreach ($rawData as $rawRefObject) {
+			$newListItemEl = $this->createElement('li');
+			$newListItemEl->setAttribute('id', $rawRefObject->getId());
+			$textRefNode = $this->createTextNode(trim($rawRefObject->getRawReference()));
+			$newListItemEl->appendChild($textRefNode);
+			$listEl->appendChild($newListItemEl);
 		}
 	}
 
