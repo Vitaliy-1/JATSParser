@@ -8,6 +8,7 @@ class ComposerStaticInit091355fbb6e009670e76e1a30f9d6758
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'd9e2a8c16442dde496ed7a052bc063c9' => __DIR__ . '/..' . '/seboettg/citeproc-php/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -34,7 +35,7 @@ class ComposerStaticInit091355fbb6e009670e76e1a30f9d6758
         ),
         'Seboettg\\Collection\\' => 
         array (
-            0 => __DIR__ . '/..' . '/seboettg/collection/src/Seboettg/Collection',
+            0 => __DIR__ . '/..' . '/seboettg/collection/src',
         ),
         'Seboettg\\CiteProc\\' => 
         array (

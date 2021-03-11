@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
-    'Seboettg\\Collection\\' => array($vendorDir . '/seboettg/collection/src/Seboettg/Collection'),
+    'Seboettg\\Collection\\' => array($vendorDir . '/seboettg/collection/src'),
     'Seboettg\\CiteProc\\' => array($vendorDir . '/seboettg/citeproc-php/src'),
     'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
     'JATSParser\\' => array($baseDir . '/src/JATSParser'),
