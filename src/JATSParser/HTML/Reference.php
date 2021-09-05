@@ -75,7 +75,12 @@ class Reference {
 		$this->setSimpleProperty('page', 'getPages');
 
 		if (method_exists($this->jatsReference, 'getPubIdType') && array_key_exists('doi', $this->jatsReference->getPubIdType())) {
-			$this->content->{'DOI'} = $this->jatsReference->getPubIdType()['doi'];
+			$doi = $this->jatsReference->getPubIdType()['doi'];
+			// Can't pass URL, see https://github.com/Vitaliy-1/JATSParserPlugin/issues/63
+			if (self::isDoiUrl($doi)) {
+				$doi = substr_replace($doi, '', 0, strlen(DOI_REFERENCE_PREFIX));
+			}
+			$this->content->{'DOI'} =$doi;
 		}
 
 		$this->setSimpleProperty('publisher', 'getPublisherName');
@@ -158,5 +163,9 @@ class Reference {
 
 	public function getJatsReference(): AbstractReference {
 		return $this->jatsReference;
+	}
+
+	public static function isDoiUrl($doi) {
+		return substr($doi, 0, strlen(DOI_REFERENCE_PREFIX)) === DOI_REFERENCE_PREFIX;
 	}
 }
