@@ -1,5 +1,5 @@
 {
-    "name": "doc/jatsParser",
+    "name": "doc/jats-parser",
     "description": "JATS XML parser",
     "type": "library",
     "license": "GPLv3",
@@ -37,7 +37,7 @@
 		}
 	],
     "require": {
-        "php": "^7.3",
+        "php": "^7.3|^8.0",
         "tecnickcom/tcpdf": "^6.2.17",
 		"citation-style-language/locales":"@dev",
 		"citation-style-language/styles-distribution":"@dev",
